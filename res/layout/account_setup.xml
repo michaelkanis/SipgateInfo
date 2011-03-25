@@ -6,11 +6,11 @@
     <TableLayout android:id="@+id/tableLayout1" android:layout_width="match_parent" android:layout_height="wrap_content" android:stretchColumns="1">
         <TableRow android:id="@+id/tableRow3" android:layout_margin="5dip" android:layout_width="match_parent" android:layout_height="match_parent">
             <TextView android:layout_height="wrap_content" android:text="Username" android:id="@+id/label_username" android:layout_width="wrap_content" android:layout_marginRight="5dip"></TextView>
-            <EditText android:id="@+id/username" android:text="Username" android:layout_height="wrap_content" android:layout_width="wrap_content"></EditText>
+            <EditText android:id="@+id/username" android:layout_height="wrap_content" android:layout_width="wrap_content" android:hint="Username"></EditText>
         </TableRow>
         <TableRow android:layout_height="match_parent" android:id="@+id/tableRow1" android:layout_margin="5dip" android:layout_width="match_parent">
             <TextView android:layout_height="wrap_content" android:text="Password" android:layout_width="wrap_content" android:id="@+id/label_password" android:layout_marginRight="5dip"></TextView>
-            <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/password" android:text="Password" android:password="true"></EditText>
+            <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/password" android:password="true" android:hint="Password"></EditText>
         </TableRow>
     </TableLayout>
     <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_gravity="right">
