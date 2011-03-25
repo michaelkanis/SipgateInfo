@@ -25,8 +25,14 @@ public class Account_setup extends Activity {
         username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
         
-		username.setText(settings.getString("username", "Username"));
-		password.setText(settings.getString("password", "Password"));
+		String username_string = settings.getString("username", null);
+		String password_string = settings.getString("password", null);
+		
+		if (username_string != null)
+			username.setText(username_string);
+		
+		if (password_string != null)
+			password.setText(password_string);
 	}
 	
 	private void switchToMainActivity() {
