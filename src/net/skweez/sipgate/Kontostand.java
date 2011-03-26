@@ -1,11 +1,14 @@
 package net.skweez.sipgate;
 
+import java.net.Authenticator;
+
 import net.skweez.sipgate.api.ISipgateAPI;
+import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,7 +17,7 @@ import android.widget.TextView;
 public class Kontostand extends Activity {
 	/** Called when the activity is first created. */
 
-	public static final String PREFS_NAME = "com.skweez.net.sipgate.kontostand.pref";
+	public static final String PREFS_NAME = "net.skweez.sipgate.pref";
 
 	private TextView tv;
 
@@ -48,6 +51,9 @@ public class Kontostand extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Authenticator.setDefault(new PreferencesAuthenticator(
+				getSharedPreferences(PREFS_NAME, 0)));
+
 		tv = new TextView(this);
 		tv.setText("Trying to get your balance …");
 		setContentView(tv);
@@ -55,21 +61,29 @@ public class Kontostand extends Activity {
 		updateBalance();
 	}
 
-	public void updateBalance() {
+	private void updateBalance() {
 		new Thread() {
 			/** {@inheritDoc} */
 			@Override
 			public void run() {
-				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-				final ISipgateAPI sipgate = new SipgateXmlRpcImpl(
-						settings.getString("username", ""), settings.getString(
-								"password", ""));
+				try {
+					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
+					final String balance = sipgate.getBalance().toString();
 
-				tv.post(new Runnable() {
-					public void run() {
-						tv.setText(sipgate.getBalance().toString());
-					}
-				});
+					tv.post(new Runnable() {
+						public void run() {
+							tv.setText(balance);
+						}
+					});
+				} catch (SipgateException e) {
+					Log.e("Sipgate", "error", e);
+
+					tv.post(new Runnable() {
+						public void run() {
+							tv.setText("Error");
+						}
+					});
+				}
 			}
 		}.start();
 	}

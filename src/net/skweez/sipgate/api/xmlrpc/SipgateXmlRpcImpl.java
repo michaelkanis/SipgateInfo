@@ -14,6 +14,8 @@
  +-----------------------------------------------------------------------*/
 package net.skweez.sipgate.api.xmlrpc;
 
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.util.Map;
 
@@ -41,13 +43,13 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 	private final XMLRPCClient client;
 
-	private final String password;
+	public SipgateXmlRpcImpl() {
+		PasswordAuthentication authentication = Authenticator
+				.requestPasswordAuthentication(null, 80, "http", null, null);
 
-	private final String username;
+		String username = authentication.getUserName();
+		String password = String.valueOf(authentication.getPassword());
 
-	public SipgateXmlRpcImpl(String username, String password) {
-		this.username = username;
-		this.password = password;
 		client = new XMLRPCClient(API_URI, username, password);
 	}
 
