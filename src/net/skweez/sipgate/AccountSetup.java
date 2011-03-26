@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 public class AccountSetup extends Activity {
 
-	public static final String PREFS_NAME = "com.skweez.net.sipgate.kontostand.pref";
 	private SharedPreferences settings;
 
 	private EditText username;
@@ -20,7 +19,7 @@ public class AccountSetup extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.account_setup);
 
-		settings = getSharedPreferences(PREFS_NAME, 0);
+		settings = getSharedPreferences(Kontostand.PREFS_NAME, 0);
 
 		username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
