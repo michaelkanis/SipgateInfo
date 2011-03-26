@@ -9,6 +9,6 @@ package net.skweez.sipgate.api;
  */
 public interface ISipgateAPI {
 
-	public Object getBalance();
+	public Price getBalance();
 
 }

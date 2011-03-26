@@ -1,15 +1,11 @@
 package net.skweez.sipgate;
 
-import java.net.URI;
-import java.util.HashMap;
-
-import org.xmlrpc.android.XMLRPCClient;
-
+import net.skweez.sipgate.api.ISipgateAPI;
+import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,35 +49,29 @@ public class Kontostand extends Activity {
 		super.onCreate(savedInstanceState);
 
 		tv = new TextView(this);
-		tv.setText("Trying to get your vat...");
+		tv.setText("Trying to get your balance …");
 		setContentView(tv);
 
-		getBalance();
+		updateBalance();
 	}
 
-	public void getBalance() {
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		URI uri = URI.create("https://samurai.sipgate.net/RPC2");
-		XMLRPCClient client = new XMLRPCClient(uri, settings.getString(
-				"username", ""), settings.getString("password", ""));
+	public void updateBalance() {
+		new Thread() {
+			/** {@inheritDoc} */
+			@Override
+			public void run() {
+				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+				final ISipgateAPI sipgate = new SipgateXmlRpcImpl(
+						settings.getString("username", ""), settings.getString(
+								"password", ""));
 
-		XMLRPCMethod method = new XMLRPCMethod("samurai.BalanceGet", client,
-				new IXMLRPCMethodCallback() {
-					public void callFinished(Object result) {
-						Log.d("Test", "callFinished");
-
-						HashMap map = (HashMap) result;
-
-						String totalIncludingVat = ((HashMap) map
-								.get("CurrentBalance"))
-								.get("TotalIncludingVat").toString();
-						String currency = ((HashMap) map.get("CurrentBalance"))
-								.get("Currency").toString();
-
-						tv.setText(totalIncludingVat + " " + currency);
+				tv.post(new Runnable() {
+					public void run() {
+						tv.setText(sipgate.getBalance().toString());
 					}
 				});
-		method.call();
+			}
+		}.start();
 	}
 
 }

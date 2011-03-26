@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.Map;
 
 import net.skweez.sipgate.api.ISipgateAPI;
+import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -50,11 +51,18 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		client = new XMLRPCClient(API_URI, username, password);
 	}
 
-	public Object getBalance() {
-		return executeMethod("samurai.BalanceGet");
+	/** {@inheritDoc} */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Price getBalance() {
+		Map<String, Map> result = (Map<String, Map>) executeMethod("samurai.BalanceGet");
+		Map currentBalance = result.get("CurrentBalance");
+
+		return new Price((Double) currentBalance.get("TotalIncludingVat"),
+				(String) currentBalance.get("Currency"));
 	}
 
-	public Map<String, Object> executeMethod(String method, String... params) {
+	public Map<String, ? extends Object> executeMethod(String method,
+			String... params) {
 		try {
 			return (Map<String, Object>) client.callEx(method, params);
 		} catch (final XMLRPCException exception) {
