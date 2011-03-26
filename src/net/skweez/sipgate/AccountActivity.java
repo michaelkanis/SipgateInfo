@@ -1,25 +1,26 @@
 package net.skweez.sipgate;
 
 import java.net.Authenticator;
+import java.util.Observable;
+import java.util.Observer;
 
-import net.skweez.sipgate.api.ISipgateAPI;
-import net.skweez.sipgate.api.SipgateException;
-import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
+import net.skweez.sipgate.model.Balance;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class AccountActivity extends Activity {
+public class AccountActivity extends Activity implements Observer {
 
 	public static final String PREFS_NAME = "net.skweez.sipgate.pref";
 
-	private TextView tv;
+	/** The view that shows the account balance. */
+	private TextView balanceView;
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -27,65 +28,58 @@ public class AccountActivity extends Activity {
 		return true;
 	}
 
-	private void account_setup() {
+	private void accountSetup() {
 		Intent myIntent = new Intent();
 		myIntent.setClassName("net.skweez.sipgate",
 				AccountSetup.class.getName());
 		startActivity(myIntent);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.account_setup:
-			account_setup();
+			accountSetup();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.account);
 
-		tv = (TextView) findViewById(R.id.balanceView);
-
 		Authenticator.setDefault(new PreferencesAuthenticator(
-				getSharedPreferences(PREFS_NAME, 0)));
+				getSharedPreferences(PREFS_NAME, MODE_PRIVATE)));
 
-		tv.setText("Loading …");
-
-		updateBalance();
+		balanceView = (TextView) findViewById(R.id.balanceView);
+		refreshBalance();
 	}
 
-	private void updateBalance() {
-		new Thread() {
-			/** {@inheritDoc} */
-			@Override
-			public void run() {
-				try {
-					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
-					final String balance = sipgate.getBalance().toString();
+	/** Tells the balance object to refresh itself. */
+	private void refreshBalance() {
+		balanceView.setText("Loading …");
 
-					tv.post(new Runnable() {
-						public void run() {
-							tv.setText(balance);
-						}
-					});
-				} catch (SipgateException e) {
-					Log.e("Sipgate", "error", e);
+		Balance balance = new Balance();
+		balance.addObserver(this);
+		balance.startRefresh();
+	}
 
-					tv.post(new Runnable() {
-						public void run() {
-							tv.setText("Error");
-						}
-					});
+	/** Update the view when the balance object updated itself. */
+	public void update(final Observable observable, final Object data) {
+		if (observable instanceof Balance) {
+			balanceView.post(new Runnable() {
+				public void run() {
+					balanceView.setText(((Balance) observable).getBalance()
+							.toString());
 				}
-			}
-		}.start();
+			});
+		}
 	}
 
 }
