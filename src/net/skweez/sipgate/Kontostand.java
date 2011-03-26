@@ -1,4 +1,4 @@
-package net.skweez.sipgate.kontostand;
+package net.skweez.sipgate;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -31,8 +31,8 @@ public class Kontostand extends Activity {
 
 	private void account_setup() {
 		Intent myIntent = new Intent();
-		myIntent.setClassName("net.skweez.sipgate.kontostand",
-				"net.skweez.sipgate.kontostand.Account_setup");
+		myIntent.setClassName("net.skweez.sipgate",
+				AccountSetup.class.getName());
 		startActivity(myIntent);
 	}
 

@@ -12,7 +12,7 @@
  | 85748 Garching bei Muenchen                       ##  ##  ##  ##  ##  |
  | Germany                                           ##  ######  ##  ##  |
  +-----------------------------------------------------------------------*/
-package net.skweez.sipgate.kontostand;
+package net.skweez.sipgate;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
