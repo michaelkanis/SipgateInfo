@@ -1,7 +1,10 @@
 package net.skweez.sipgate;
 
-import net.skweez.sipgate.api.SipgateException;
-import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
+import java.net.URI;
+import java.util.HashMap;
+
+import org.xmlrpc.android.XMLRPCClient;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +32,7 @@ public class Kontostand extends Activity {
 	private void account_setup() {
 		Intent myIntent = new Intent();
 		myIntent.setClassName("net.skweez.sipgate",
-				"net.skweez.sipgate.AccountSetup");
+				AccountSetup.class.getName());
 		startActivity(myIntent);
 	}
 
@@ -53,42 +56,32 @@ public class Kontostand extends Activity {
 		tv.setText("Trying to get your vat...");
 		setContentView(tv);
 
-		updateBalance();
+		getBalance();
 	}
 
-	public void updateBalance() {
+	public void getBalance() {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		// URI uri = URI.create("https://samurai.sipgate.net/RPC2");
+		URI uri = URI.create("https://samurai.sipgate.net/RPC2");
+		XMLRPCClient client = new XMLRPCClient(uri, settings.getString(
+				"username", ""), settings.getString("password", ""));
 
-		// XMLRPCClient client = new XMLRPCClient(uri, settings.getString(
-		// "username", ""), settings.getString("password", ""));
+		XMLRPCMethod method = new XMLRPCMethod("samurai.BalanceGet", client,
+				new IXMLRPCMethodCallback() {
+					public void callFinished(Object result) {
+						Log.d("Test", "callFinished");
 
-		try {
-			SipgateXmlRpcImpl sipgate = new SipgateXmlRpcImpl(
-					settings.getString("username", ""), settings.getString(
-							"password", ""));
+						HashMap map = (HashMap) result;
 
-			tv.setText(sipgate.getBalance().toString());
-		} catch (SipgateException exception) {
-			Log.d("Sipgate Info", "Could not update Kontostand");
-		}
+						String totalIncludingVat = ((HashMap) map
+								.get("CurrentBalance"))
+								.get("TotalIncludingVat").toString();
+						String currency = ((HashMap) map.get("CurrentBalance"))
+								.get("Currency").toString();
 
-		// new XMLRPCMethod("samurai.BalanceGet", client,
-		// new IXMLRPCMethodCallback() {
-		// public void callFinished(Object result) {
-		// Log.d("Test", "callFinished");
-		//
-		// HashMap map = (HashMap) result;
-		//
-		// String totalIncludingVat = ((HashMap) map
-		// .get("CurrentBalance"))
-		// .get("TotalIncludingVat").toString();
-		// String currency = ((HashMap) map.get("CurrentBalance"))
-		// .get("Currency").toString();
-		//
-		// tv.setText(totalIncludingVat + " " + currency);
-		// }
-		// }).call();
+						tv.setText(totalIncludingVat + " " + currency);
+					}
+				});
+		method.call();
 	}
 
 }
