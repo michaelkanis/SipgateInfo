@@ -1,12 +1,7 @@
 package net.skweez.sipgate;
 
-import java.net.URI;
-import java.util.HashMap;
-
-import net.skweez.sipgate.kontostand.R;
-
-import org.xmlrpc.android.XMLRPCClient;
-
+import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,8 +28,8 @@ public class Kontostand extends Activity {
 
 	private void account_setup() {
 		Intent myIntent = new Intent();
-		myIntent.setClassName("net.skweez.sipgate.kontostand",
-				"net.skweez.sipgate.kontostand.Account_setup");
+		myIntent.setClassName("net.skweez.sipgate",
+				"net.skweez.sipgate.AccountSetup");
 		startActivity(myIntent);
 	}
 
@@ -58,32 +53,42 @@ public class Kontostand extends Activity {
 		tv.setText("Trying to get your vat...");
 		setContentView(tv);
 
-		getBalance();
+		updateBalance();
 	}
 
-	public void getBalance() {
+	public void updateBalance() {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		URI uri = URI.create("https://samurai.sipgate.net/RPC2");
-		XMLRPCClient client = new XMLRPCClient(uri, settings.getString(
-				"username", ""), settings.getString("password", ""));
+		// URI uri = URI.create("https://samurai.sipgate.net/RPC2");
 
-		XMLRPCMethod method = new XMLRPCMethod("samurai.BalanceGet", client,
-				new IXMLRPCMethodCallback() {
-					public void callFinished(Object result) {
-						Log.d("Test", "callFinished");
+		// XMLRPCClient client = new XMLRPCClient(uri, settings.getString(
+		// "username", ""), settings.getString("password", ""));
 
-						HashMap map = (HashMap) result;
+		try {
+			SipgateXmlRpcImpl sipgate = new SipgateXmlRpcImpl(
+					settings.getString("username", ""), settings.getString(
+							"password", ""));
 
-						String totalIncludingVat = ((HashMap) map
-								.get("CurrentBalance"))
-								.get("TotalIncludingVat").toString();
-						String currency = ((HashMap) map.get("CurrentBalance"))
-								.get("Currency").toString();
+			tv.setText(sipgate.getBalance().toString());
+		} catch (SipgateException exception) {
+			Log.d("Sipgate Info", "Could not update Kontostand");
+		}
 
-						tv.setText(totalIncludingVat + " " + currency);
-					}
-				});
-		method.call();
+		// new XMLRPCMethod("samurai.BalanceGet", client,
+		// new IXMLRPCMethodCallback() {
+		// public void callFinished(Object result) {
+		// Log.d("Test", "callFinished");
+		//
+		// HashMap map = (HashMap) result;
+		//
+		// String totalIncludingVat = ((HashMap) map
+		// .get("CurrentBalance"))
+		// .get("TotalIncludingVat").toString();
+		// String currency = ((HashMap) map.get("CurrentBalance"))
+		// .get("Currency").toString();
+		//
+		// tv.setText(totalIncludingVat + " " + currency);
+		// }
+		// }).call();
 	}
 
 }
