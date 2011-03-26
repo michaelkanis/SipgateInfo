@@ -35,6 +35,7 @@ public final class R {
         public static final int listView1=0x7f070003;
         public static final int params=0x7f07000e;
         public static final int password=0x7f07000a;
+        public static final int refresh=0x7f070010;
         public static final int tableLayout1=0x7f070004;
         public static final int tableRow1=0x7f070008;
         public static final int tableRow3=0x7f070005;

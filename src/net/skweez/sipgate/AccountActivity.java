@@ -43,6 +43,9 @@ public class AccountActivity extends Activity implements Observer {
 		case R.id.account_setup:
 			accountSetup();
 			return true;
+		case R.id.refresh:
+			refreshBalance();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

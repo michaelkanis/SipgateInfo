@@ -2,4 +2,5 @@
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Account setup" android:id="@+id/account_setup"></item>
+    <item android:id="@+id/refresh" android:title="Refresh"></item>
 </menu>
