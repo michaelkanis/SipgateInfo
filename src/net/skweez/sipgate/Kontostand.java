@@ -50,13 +50,14 @@ public class Kontostand extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.account);
+
+		tv = (TextView) findViewById(R.id.balanceView);
 
 		Authenticator.setDefault(new PreferencesAuthenticator(
 				getSharedPreferences(PREFS_NAME, 0)));
 
-		tv = new TextView(this);
-		tv.setText("Trying to get your balance …");
-		setContentView(tv);
+		tv.setText("Loading …");
 
 		updateBalance();
 	}
