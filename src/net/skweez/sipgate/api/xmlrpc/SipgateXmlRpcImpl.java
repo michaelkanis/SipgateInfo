@@ -17,6 +17,7 @@ package net.skweez.sipgate.api.xmlrpc;
 import java.net.URI;
 import java.util.Map;
 
+import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.SipgateException;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -29,7 +30,7 @@ import org.xmlrpc.android.XMLRPCException;
  * @version $Rev: 9 $
  * @levd.rating RED Rev:
  */
-public class SipgateXmlRpcImpl {
+public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 	private static final URI API_URI;
 
