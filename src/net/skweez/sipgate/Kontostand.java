@@ -1,13 +1,12 @@
 package net.skweez.sipgate;
 
-import java.net.URI;
-import java.util.HashMap;
+import java.net.Authenticator;
 
-import org.xmlrpc.android.XMLRPCClient;
-
+import net.skweez.sipgate.api.ISipgateAPI;
+import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 public class Kontostand extends Activity {
 	/** Called when the activity is first created. */
 
-	public static final String PREFS_NAME = "com.skweez.net.sipgate.kontostand.pref";
+	public static final String PREFS_NAME = "net.skweez.sipgate.pref";
 
 	private TextView tv;
 
@@ -52,36 +51,41 @@ public class Kontostand extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Authenticator.setDefault(new PreferencesAuthenticator(
+				getSharedPreferences(PREFS_NAME, 0)));
+
 		tv = new TextView(this);
-		tv.setText("Trying to get your vat...");
+		tv.setText("Trying to get your balance …");
 		setContentView(tv);
 
-		getBalance();
+		updateBalance();
 	}
 
-	public void getBalance() {
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		URI uri = URI.create("https://samurai.sipgate.net/RPC2");
-		XMLRPCClient client = new XMLRPCClient(uri, settings.getString(
-				"username", ""), settings.getString("password", ""));
+	private void updateBalance() {
+		new Thread() {
+			/** {@inheritDoc} */
+			@Override
+			public void run() {
+				try {
+					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
+					final String balance = sipgate.getBalance().toString();
 
-		XMLRPCMethod method = new XMLRPCMethod("samurai.BalanceGet", client,
-				new IXMLRPCMethodCallback() {
-					public void callFinished(Object result) {
-						Log.d("Test", "callFinished");
+					tv.post(new Runnable() {
+						public void run() {
+							tv.setText(balance);
+						}
+					});
+				} catch (SipgateException e) {
+					Log.e("Sipgate", "error", e);
 
-						HashMap map = (HashMap) result;
-
-						String totalIncludingVat = ((HashMap) map
-								.get("CurrentBalance"))
-								.get("TotalIncludingVat").toString();
-						String currency = ((HashMap) map.get("CurrentBalance"))
-								.get("Currency").toString();
-
-						tv.setText(totalIncludingVat + " " + currency);
-					}
-				});
-		method.call();
+					tv.post(new Runnable() {
+						public void run() {
+							tv.setText("Error");
+						}
+					});
+				}
+			}
+		}.start();
 	}
 
 }
