@@ -1,5 +1,6 @@
-package net.skweez.sipgate.kontostand;
+package net.skweez.sipgate;
 
+import net.skweez.sipgate.kontostand.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

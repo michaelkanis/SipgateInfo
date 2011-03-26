@@ -12,7 +12,7 @@
  | 85748 Garching bei Muenchen                       ##  ##  ##  ##  ##  |
  | Germany                                           ##  ######  ##  ##  |
  +-----------------------------------------------------------------------*/
-package net.skweez.sipgate.kontostand;
+package net.skweez.sipgate;
 
 /**
  * 

@@ -1,7 +1,9 @@
-package net.skweez.sipgate.kontostand;
+package net.skweez.sipgate;
 
 import java.net.URI;
 import java.util.HashMap;
+
+import net.skweez.sipgate.kontostand.R;
 
 import org.xmlrpc.android.XMLRPCClient;
 
