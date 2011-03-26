@@ -38,7 +38,8 @@ public class SetupActivity extends Activity {
 
 	private void switchToMainActivity() {
 		Intent myIntent = new Intent();
-		myIntent.setClassName("net.skweez.sipgate", AccountActivity.class.getName());
+		myIntent.setClassName("net.skweez.sipgate",
+				SipgateTabActivity.class.getName());
 		startActivity(myIntent);
 	}
 

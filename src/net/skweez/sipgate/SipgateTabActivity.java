@@ -29,8 +29,8 @@ public class SipgateTabActivity extends TabActivity {
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		intent = new Intent().setClass(this, SetupActivity.class);
-		tabSpec = tabHost.newTabSpec("setup").setIndicator("Setup")
+		intent = new Intent().setClass(this, CallsListActivity.class);
+		tabSpec = tabHost.newTabSpec("calls").setIndicator("Calls")
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 	}
