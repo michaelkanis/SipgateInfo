@@ -14,8 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class Kontostand extends Activity {
-	/** Called when the activity is first created. */
+public class AccountActivity extends Activity {
 
 	public static final String PREFS_NAME = "net.skweez.sipgate.pref";
 

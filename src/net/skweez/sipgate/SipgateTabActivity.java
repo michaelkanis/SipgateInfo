@@ -12,7 +12,7 @@ import android.widget.TabHost;
  * @version $Rev: 9 $
  * @levd.rating RED Rev:
  */
-public class SipgateInfo extends TabActivity {
+public class SipgateTabActivity extends TabActivity {
 
 	/** {@inheritDoc} */
 	@Override
@@ -24,7 +24,7 @@ public class SipgateInfo extends TabActivity {
 		TabHost.TabSpec tabSpec;
 		Intent intent;
 
-		intent = new Intent().setClass(this, Kontostand.class);
+		intent = new Intent().setClass(this, AccountActivity.class);
 		tabSpec = tabHost.newTabSpec("account").setIndicator("Account")
 				.setContent(intent);
 		tabHost.addTab(tabSpec);

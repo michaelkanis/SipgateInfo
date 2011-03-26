@@ -19,7 +19,7 @@ public class AccountSetup extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.account_setup);
 
-		settings = getSharedPreferences(Kontostand.PREFS_NAME, 0);
+		settings = getSharedPreferences(AccountActivity.PREFS_NAME, 0);
 
 		username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
@@ -38,7 +38,7 @@ public class AccountSetup extends Activity {
 
 	private void switchToMainActivity() {
 		Intent myIntent = new Intent();
-		myIntent.setClassName("net.skweez.sipgate", Kontostand.class.getName());
+		myIntent.setClassName("net.skweez.sipgate", AccountActivity.class.getName());
 		startActivity(myIntent);
 	}
 
