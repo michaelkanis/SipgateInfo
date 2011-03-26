@@ -7,7 +7,7 @@
 
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".Kontostand"
+        <activity android:name=".SipgateInfo"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,6 +15,7 @@
             </intent-filter>
         </activity>
         <activity android:name="AccountSetup"></activity>
+        <activity android:name="Kontostand"></activity>
 
     </application>
 </manifest>
