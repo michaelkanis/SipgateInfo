@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-public class AccountSetup extends Activity {
+public class SetupActivity extends Activity {
 
 	private SharedPreferences settings;
 

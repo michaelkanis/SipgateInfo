@@ -29,7 +29,7 @@ public class SipgateTabActivity extends TabActivity {
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		intent = new Intent().setClass(this, AccountSetup.class);
+		intent = new Intent().setClass(this, SetupActivity.class);
 		tabSpec = tabHost.newTabSpec("setup").setIndicator("Setup")
 				.setContent(intent);
 		tabHost.addTab(tabSpec);

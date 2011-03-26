@@ -31,7 +31,7 @@ public class AccountActivity extends Activity implements Observer {
 	private void accountSetup() {
 		Intent myIntent = new Intent();
 		myIntent.setClassName("net.skweez.sipgate",
-				AccountSetup.class.getName());
+				SetupActivity.class.getName());
 		startActivity(myIntent);
 	}
 
