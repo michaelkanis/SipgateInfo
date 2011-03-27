@@ -24,7 +24,6 @@ public final class R {
         public static final int sipgatelogo=0x7f020006;
     }
     public static final class id {
-        public static final int account_setup=0x7f08000f;
         public static final int balanceView=0x7f080002;
         public static final int button_cancel=0x7f08000b;
         public static final int button_done=0x7f08000c;
@@ -35,7 +34,7 @@ public final class R {
         public static final int listView1=0x7f080003;
         public static final int params=0x7f08000e;
         public static final int password=0x7f08000a;
-        public static final int refresh=0x7f080010;
+        public static final int refresh=0x7f08000f;
         public static final int tableLayout1=0x7f080004;
         public static final int tableRow1=0x7f080008;
         public static final int tableRow3=0x7f080005;
