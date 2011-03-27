@@ -16,7 +16,6 @@ public class SetupActivity extends PreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 
-		// Get a reference to the preferences
 		userNamePreference = (EditTextPreference) getPreferenceScreen()
 				.findPreference("username");
 	}
@@ -35,12 +34,10 @@ public class SetupActivity extends PreferenceActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		// Setup the initial values
 		userNamePreference.setSummary(getPreferenceScreen()
 				.getSharedPreferences().getString("username",
 						"Please set up your user name."));
 
-		// Set up a listener whenever a key changes
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -49,7 +46,6 @@ public class SetupActivity extends PreferenceActivity implements
 	protected void onPause() {
 		super.onPause();
 
-		// Unregister the listener whenever a key changes
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
 	}
