@@ -8,14 +8,13 @@ import net.skweez.sipgate.model.Balance;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 public class AccountActivity extends Activity implements Observer {
-
-	public static final String PREFS_NAME = "net.skweez.sipgate.pref";
 
 	/** The view that shows the account balance. */
 	private TextView balanceView;
@@ -57,8 +56,8 @@ public class AccountActivity extends Activity implements Observer {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.account);
 
-		Authenticator.setDefault(new PreferencesAuthenticator(
-				getSharedPreferences(PREFS_NAME, MODE_PRIVATE)));
+		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
+				.getDefaultSharedPreferences(this)));
 
 		balanceView = (TextView) findViewById(R.id.balanceView);
 		refreshBalance();
