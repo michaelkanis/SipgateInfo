@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 public class AccountActivity extends Activity implements Observer {
 
-	public static final String PREFS_NAME = "net.skweez.sipgate.pref";
-
 	/** The view that shows the account balance. */
 	private TextView balanceView;
 
