@@ -1,5 +1,8 @@
 package net.skweez.sipgate.api;
 
+import java.text.NumberFormat;
+import java.util.Currency;
+
 /**
  * 
  * @author mks
@@ -9,29 +12,25 @@ package net.skweez.sipgate.api;
  */
 public class Price {
 
+	/** Formats the money amount as a currency. */
+	private final NumberFormat format = NumberFormat.getCurrencyInstance();
+
 	/** Amount of money in Currency that is available at user's account. */
 	private final Double amount;
 
-	/** Currency code as defined by the ISO 4217 standard. */
-	private final String currency;
-
+	/**
+	 * @param currency
+	 *            the currency code in ISO 4217 format.
+	 * @throws IllegalArgumentException
+	 *             if the currency code is not a supported ISO 4217 currency
+	 *             code.
+	 */
 	public Price(Double amount, String currency) {
 		this.amount = amount;
-		this.currency = currency;
+		format.setCurrency(Currency.getInstance(currency));
 	}
 
-	/**
-	 * Returns currency code as defined by the ISO 4217 standard (e.g. "USD" or
-	 * "EUR").
-	 */
-	public String getCurrency() {
-		return currency;
-	}
-
-	/**
-	 * Returns amount of money in <i>currency</i> specified by
-	 * {@link #getCurrency()}.
-	 */
+	/** Returns the amount of money. */
 	public Double getAmount() {
 		return amount;
 	}
@@ -39,7 +38,8 @@ public class Price {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return new StringBuilder().append(amount).append(" ").append(currency)
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append(format.format(amount)).append(" ");
+		return builder.toString();
 	}
 }
