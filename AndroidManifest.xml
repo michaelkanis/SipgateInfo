@@ -14,8 +14,8 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="SetupActivity"></activity>
-		<activity android:name="AccountActivity"></activity>
 		<activity android:name="CallsListActivity"></activity>
+		<activity android:name="AccountInfoActivity"></activity>
 
 	</application>
 </manifest>

@@ -37,7 +37,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		TabHost.TabSpec tabSpec;
 		Intent intent;
 
-		intent = new Intent().setClass(this, SetupActivity.class);
+		intent = new Intent().setClass(this, AccountInfoActivity.class);
 		tabSpec = tabHost.newTabSpec("account").setIndicator("Account")
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
@@ -70,6 +70,8 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		case R.id.refresh:
 			refreshBalance();
 			return true;
+		case R.id.setup:
+			return showSetupActivity();			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -82,6 +84,15 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		Balance balance = new Balance();
 		balance.addObserver(this);
 		balance.startRefresh();
+	}
+	
+	private boolean showSetupActivity() {
+		Intent intent;
+		
+		intent = new Intent().setClass(this, SetupActivity.class);
+		startActivity(intent);
+		
+		return true;
 	}
 
 	/** Update the view when the balance object updated itself. */

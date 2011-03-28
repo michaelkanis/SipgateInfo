@@ -14,6 +14,9 @@ public class SetupActivity extends PreferenceActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.setup);
+		
 		addPreferencesFromResource(R.xml.preferences);
 
 		userNamePreference = (EditTextPreference) getPreferenceScreen()
