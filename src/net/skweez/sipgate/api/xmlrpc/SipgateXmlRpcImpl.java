@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Map;
 
 import net.skweez.sipgate.api.ISipgateAPI;
+import net.skweez.sipgate.api.OwnURI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
 
@@ -70,5 +71,14 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		} catch (final XMLRPCException exception) {
 			throw new SipgateException(exception);
 		}
+	}
+
+	public OwnURI[] getOwnURIList() {
+		Map<String, Map> result = (Map<String, Map>) executeMethod("samurai.OwnUriListGet");
+		
+		/* this is for test only */
+		OwnURI[] ownURIList = new OwnURI[1];
+		ownURIList[0] = new OwnURI("test");
+		return ownURIList;
 	}
 }

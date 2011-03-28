@@ -11,4 +11,5 @@ public interface ISipgateAPI {
 
 	public Price getBalance();
 
+	public OwnURI[] getOwnURIList();
 }
