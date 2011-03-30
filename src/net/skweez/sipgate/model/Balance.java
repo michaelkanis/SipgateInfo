@@ -29,8 +29,6 @@ public class Balance extends Observable {
 				try {
 					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
 					setBalance(sipgate.getBalance());
-					setChanged();
-					notifyObservers();
 				} catch (SipgateException e) {
 					Log.e("Sipgate", "error", e);
 					// TODO proper error handling!
@@ -41,6 +39,8 @@ public class Balance extends Observable {
 
 	private synchronized void setBalance(Price balance) {
 		this.balance = balance;
+		setChanged();
+		notifyObservers();
 	}
 
 	public Price getBalance() {
