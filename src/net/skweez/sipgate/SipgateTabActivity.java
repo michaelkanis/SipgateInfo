@@ -32,6 +32,9 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
+				.getDefaultSharedPreferences(this)));
 
 		TabHost tabHost = getTabHost();
 		TabHost.TabSpec tabSpec;
@@ -47,8 +50,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
-				.getDefaultSharedPreferences(this)));
+		
 
 		balanceView = (TextView) findViewById(R.id.balanceView);
 		refreshBalance();

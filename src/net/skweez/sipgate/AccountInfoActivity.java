@@ -32,13 +32,13 @@ public class AccountInfoActivity extends Activity implements Observer {
 	}
 
 	public void update(final Observable observable, Object data) {
-		/*if (observable instanceof UserInfos) {
+		if (observable instanceof UserInfos) {
 			sipuriView.post(new Runnable() {
 				public void run() {
 					sipuriView.setText(((UserInfos) observable).getOwnURIs()[0].sipURI);
 				}
 			});
-		}*/
+		}
 		
 	}
 

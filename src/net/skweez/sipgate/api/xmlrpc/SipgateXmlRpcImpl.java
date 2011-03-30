@@ -27,6 +27,8 @@ import net.skweez.sipgate.api.SipgateException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import android.util.Log;
+
 /**
  * 
  * @author mks
@@ -74,11 +76,15 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 	}
 
 	public OwnURI[] getOwnURIList() {
-		Map<String, Map> result = (Map<String, Map>) executeMethod("samurai.OwnUriListGet");
+		Map<String, Object> result = (Map<String, Object>) executeMethod("samurai.OwnUriListGet");
+		
+		Log.d("test", result.toString());
+		
+		Log.d("test", (result.get("OwnUriList")).toString());
 		
 		/* this is for test only */
-		OwnURI[] ownURIList = new OwnURI[1];
-		ownURIList[0] = new OwnURI("test");
-		return ownURIList;
+		OwnURI[] ownURIList_test = new OwnURI[1];
+		ownURIList_test[0] = new OwnURI("test");
+		return ownURIList_test;
 	}
 }
