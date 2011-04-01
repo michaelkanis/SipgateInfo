@@ -35,8 +35,6 @@ public class UserInfos extends Observable {
 				try {
 					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
 					setUserUriArray(sipgate.getUserUriList());
-					setChanged();
-					notifyObservers();
 				} catch (SipgateException e) {
 					Log.e("Sipgate", "error", e);
 					// TODO proper error handling!
@@ -48,6 +46,9 @@ public class UserInfos extends Observable {
 	private synchronized void setUserUriArray(UserUri[] userUriArray) {
 		this.userUriArray = userUriArray;
 		this.length = userUriArray.length;
+
+		setChanged();
+		notifyObservers();
 	}
 
 	public UserUri[] getUserUriArray() {
