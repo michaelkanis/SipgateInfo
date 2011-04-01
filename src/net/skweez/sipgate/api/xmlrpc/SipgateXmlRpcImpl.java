@@ -73,7 +73,7 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		}
 	}
 
-	public UserUri[] getOwnURIList() {
+	public UserUri[] getUserUriList() {
 		Map<String, Object> result = (Map<String, Object>) executeMethod("samurai.OwnUriListGet");
 
 		Object[] userUriMap = (Object[]) result.get("OwnUriList");

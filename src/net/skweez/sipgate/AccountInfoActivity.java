@@ -55,7 +55,7 @@ public class AccountInfoActivity extends ListActivity {
 				tv = (TextView) convertView;
 			}
 
-			tv.setText(userInfos.getOwnURIs()[position].e164Out);
+			tv.setText(userInfos.getUserUriArray()[position].e164Out);
 
 			return tv;
 		}

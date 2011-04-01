@@ -8,8 +8,15 @@ import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;
 
+enum Gender {
+	male, female
+}
+
 public class UserInfos extends Observable {
 
+	private String firstName;
+	private String lastName;
+	private Gender gender;
 	private UserUri[] userUriArray;
 
 	public int length;
@@ -27,7 +34,7 @@ public class UserInfos extends Observable {
 			public void run() {
 				try {
 					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
-					setOwnURIs(sipgate.getOwnURIList());
+					setUserUriArray(sipgate.getUserUriList());
 					setChanged();
 					notifyObservers();
 				} catch (SipgateException e) {
@@ -38,12 +45,12 @@ public class UserInfos extends Observable {
 		}.start();
 	}
 
-	private synchronized void setOwnURIs(UserUri[] userUriArray) {
+	private synchronized void setUserUriArray(UserUri[] userUriArray) {
 		this.userUriArray = userUriArray;
 		this.length = userUriArray.length;
 	}
 
-	public UserUri[] getOwnURIs() {
+	public UserUri[] getUserUriArray() {
 		return userUriArray;
 	}
 }
