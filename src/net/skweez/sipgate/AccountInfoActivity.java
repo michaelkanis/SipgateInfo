@@ -6,7 +6,6 @@ import java.util.Observer;
 import net.skweez.sipgate.model.UserInfos;
 import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,16 @@ public class AccountInfoActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setListAdapter(new UserInfoAdapter(this, this));
+		setListAdapter(new UserInfoAdapter(this));
 
 	}
 
 	private class UserInfoAdapter extends BaseAdapter implements Observer {
 
 		private UserInfos userInfos;
-		private Context mContext;
 		private Activity mActivity;
 
-		public UserInfoAdapter(Context context, Activity activity) {
-			this.mContext = context;
+		public UserInfoAdapter(Activity activity) {
 			this.mActivity = activity;
 
 			userInfos = new UserInfos();
@@ -53,7 +50,7 @@ public class AccountInfoActivity extends ListActivity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView tv;
 			if (convertView == null) {
-				tv = new TextView(this.mContext);
+				tv = new TextView(this.mActivity);
 			} else {
 				tv = (TextView) convertView;
 			}
