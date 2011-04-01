@@ -27,8 +27,6 @@ import net.skweez.sipgate.api.UserUri;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import android.util.Log;
-
 /**
  * 
  * @author mks
@@ -83,18 +81,9 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 		for (int i = 0; i < userUriMap.length; i++) {
 			Map entry = (Map) userUriMap[i];
-			Log.d("test", entry.toString());
-
 			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
 					new Boolean(entry.get("DefaultUri").toString()));
-
 		}
-
-		/*
-		 * Log.d("test", ((String[]) ((Object[]) ((Map) userUriMap[0])
-		 * .get("E164In")))[0].toString());
-		 */
-
 		return userUriList;
 	}
 }
