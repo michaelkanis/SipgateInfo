@@ -22,13 +22,18 @@ import java.util.List;
 import java.util.Map;
 
 import net.skweez.sipgate.api.Call;
+import net.skweez.sipgate.api.Gender;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipURI;
 import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.UserName;
+import net.skweez.sipgate.api.UserUri;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
+
+import android.util.Log;
 
 /**
  * 
@@ -95,7 +100,28 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		return call;
 	}
 
-	public Map<String, ? extends Object> executeMethod(String method,
+	public UserUri[] getUserUriList() {
+		Map<String, Object> result = (Map<String, Object>) executeMethod("samurai.OwnUriListGet");
+
+		Object[] userUriMap = (Object[]) result.get("OwnUriList");
+		UserUri[] userUriList = new UserUri[userUriMap.length];
+
+		for (int i = 0; i < userUriMap.length; i++) {
+			Map entry = (Map) userUriMap[i];
+			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
+					new Boolean(entry.get("DefaultUri").toString()));
+		}
+		return userUriList;
+	}
+
+	public UserName getUserName() {
+		Map<String, String> result = (Map<String, String>) executeMethod("samurai.UserdataGreetingGet");
+
+		return new UserName(result.get("FirstName"), result.get("LastName"),
+				Gender.fromString(result.get("Gender")));
+	}
+
+	private Map<String, ? extends Object> executeMethod(String method,
 			String... params) {
 		try {
 			return (Map<String, Object>) client.callEx(method, params);

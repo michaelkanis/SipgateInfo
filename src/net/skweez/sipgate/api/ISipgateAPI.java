@@ -16,4 +16,7 @@ public interface ISipgateAPI {
 	
 	public List<Call> getHistoryByDate();
 
+	public UserUri[] getUserUriList();
+
+	public UserName getUserName();
 }
