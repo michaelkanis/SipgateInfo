@@ -68,15 +68,6 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 				(String) currentBalance.get("Currency"));
 	}
 
-	public Map<String, ? extends Object> executeMethod(String method,
-			String... params) {
-		try {
-			return (Map<String, Object>) client.callEx(method, params);
-		} catch (final XMLRPCException exception) {
-			throw new SipgateException(exception);
-		}
-	}
-
 	public UserUri[] getUserUriList() {
 		Map<String, Object> result = (Map<String, Object>) executeMethod("samurai.OwnUriListGet");
 
@@ -96,5 +87,14 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 		return new UserName(result.get("FirstName"), result.get("LastName"),
 				Gender.fromString(result.get("Gender")));
+	}
+
+	private Map<String, ? extends Object> executeMethod(String method,
+			String... params) {
+		try {
+			return (Map<String, Object>) client.callEx(method, params);
+		} catch (final XMLRPCException exception) {
+			throw new SipgateException(exception);
+		}
 	}
 }
