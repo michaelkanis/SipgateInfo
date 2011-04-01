@@ -99,9 +99,9 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		Gender gender;
 
 		if (result.get("Gender").equals("male")) {
-			gender = Gender.male;
+			gender = Gender.MALE;
 		} else {
-			gender = Gender.female;
+			gender = Gender.FEMALE;
 		}
 
 		return new UserName(result.get("FirstName"), result.get("LastName"),
