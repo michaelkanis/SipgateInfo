@@ -17,10 +17,14 @@ package net.skweez.sipgate.api.xmlrpc;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
+import net.skweez.sipgate.api.SipURI;
 import net.skweez.sipgate.api.SipgateException;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -61,6 +65,34 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 		return new Price((Double) currentBalance.get("TotalIncludingVat"),
 				(String) currentBalance.get("Currency"));
+	}
+
+	public List<Call> getHistoryByDate() {
+		List<Call> callList = new ArrayList<Call>();
+		
+		Map result = executeMethod("samurai.HistoryGetByDate");
+		Object[] history = (Object[]) result.get("History");
+		
+		for (Object object : history) {
+			callList.add(createCallFromMap((Map) object));
+		}
+		
+		return callList;
+	}
+	
+	private Call createCallFromMap(Map map) {
+		Call call = new Call();
+		
+		call.setLocalURI(new SipURI((String) map.get("LocalUri")));
+		call.setRemoteURI(new SipURI((String) map.get("RemoteUri")));
+		
+//		System.out.println("Type of Status: " + map.get("Status").getClass().getName());
+//		System.out.println("Type of Timestamp: " + map.get("Timestamp").getClass().getName());
+		
+//		call.setStatus(map.get("Status"));
+//		call.setTimestamp(timestamp);
+		
+		return call;
 	}
 
 	public Map<String, ? extends Object> executeMethod(String method,
