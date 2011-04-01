@@ -19,13 +19,17 @@ import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.util.Map;
 
+import net.skweez.sipgate.api.Gender;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
+
+import android.util.Log;
 
 /**
  * 
@@ -85,5 +89,22 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 					new Boolean(entry.get("DefaultUri").toString()));
 		}
 		return userUriList;
+	}
+
+	public UserName getUserName() {
+		Map<String, String> result = (Map<String, String>) executeMethod("samurai.UserdataGreetingGet");
+
+		Log.d("test", result.toString());
+
+		Gender gender;
+
+		if (result.get("Gender").equals("male")) {
+			gender = Gender.male;
+		} else {
+			gender = Gender.female;
+		}
+
+		return new UserName(result.get("FirstName"), result.get("LastName"),
+				gender);
 	}
 }

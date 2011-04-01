@@ -7,6 +7,7 @@ import net.skweez.sipgate.model.UserInfos;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -26,9 +27,12 @@ public class AccountInfoActivity extends ListActivity {
 
 		private UserInfos userInfos;
 		private Activity mActivity;
+		private LayoutInflater mInfalter;
 
 		public UserInfoAdapter(Activity activity) {
 			this.mActivity = activity;
+
+			this.mInfalter = LayoutInflater.from(activity);
 
 			userInfos = new UserInfos();
 			userInfos.addObserver(this);
@@ -48,16 +52,24 @@ public class AccountInfoActivity extends ListActivity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView tv;
+			View v;
 			if (convertView == null) {
-				tv = new TextView(this.mActivity);
+				v = mInfalter.inflate(R.layout.userinfo, null);
 			} else {
-				tv = (TextView) convertView;
+				v = (View) convertView;
 			}
 
-			tv.setText(userInfos.getUserUriArray()[position].e164Out);
+			// TODO: Oh no, this is very ugly. Please fix me...
 
-			return tv;
+			TextView tv = (TextView) v.findViewById(R.id.textView2);
+			if (position == 0) {
+				tv.setText(userInfos.getUserName().firstName + " "
+						+ userInfos.getUserName().lastName);
+			} else {
+				tv.setText("+" + userInfos.getUserUriArray()[0].e164Out);
+			}
+
+			return v;
 		}
 
 		public void update(Observable observable, Object data) {

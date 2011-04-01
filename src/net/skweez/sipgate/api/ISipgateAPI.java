@@ -12,4 +12,6 @@ public interface ISipgateAPI {
 	public Price getBalance();
 
 	public UserUri[] getUserUriList();
+
+	public UserName getUserName();
 }

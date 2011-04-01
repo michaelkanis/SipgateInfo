@@ -4,19 +4,14 @@ import java.util.Observable;
 
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;
 
-enum Gender {
-	male, female
-}
-
 public class UserInfos extends Observable {
 
-	private String firstName;
-	private String lastName;
-	private Gender gender;
+	private UserName userName;
 	private UserUri[] userUriArray;
 
 	public int length;
@@ -34,7 +29,8 @@ public class UserInfos extends Observable {
 			public void run() {
 				try {
 					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
-					setUserUriArray(sipgate.getUserUriList());
+					setUserInfos(sipgate.getUserUriList(),
+							sipgate.getUserName());
 				} catch (SipgateException e) {
 					Log.e("Sipgate", "error", e);
 					// TODO proper error handling!
@@ -43,9 +39,11 @@ public class UserInfos extends Observable {
 		}.start();
 	}
 
-	private synchronized void setUserUriArray(UserUri[] userUriArray) {
+	private synchronized void setUserInfos(UserUri[] userUriArray,
+			UserName userName) {
 		this.userUriArray = userUriArray;
-		this.length = userUriArray.length;
+		this.userName = userName;
+		this.length = userUriArray.length + 1;
 
 		setChanged();
 		notifyObservers();
@@ -53,5 +51,9 @@ public class UserInfos extends Observable {
 
 	public UserUri[] getUserUriArray() {
 		return userUriArray;
+	}
+
+	public UserName getUserName() {
+		return userName;
 	}
 }
