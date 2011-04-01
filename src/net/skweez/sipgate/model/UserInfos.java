@@ -2,19 +2,24 @@ package net.skweez.sipgate.model;
 
 import java.util.Observable;
 
-import android.util.Log;
-
 import net.skweez.sipgate.api.ISipgateAPI;
-import net.skweez.sipgate.api.OwnURI;
 import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
+import android.util.Log;
 
 public class UserInfos extends Observable {
 
-	private OwnURI[] ownURIArray;
-	
+	private UserUri[] userUriArray;
+
+	public int length;
+
+	public UserInfos() {
+		length = 0;
+	}
+
 	public void startRefresh() {
-		
+
 		new Thread() {
 
 			/** {@inheritDoc} */
@@ -32,12 +37,13 @@ public class UserInfos extends Observable {
 			}
 		}.start();
 	}
-	
-	private synchronized void setOwnURIs(OwnURI[] ownURIArray) {
-		this.ownURIArray = ownURIArray;
+
+	private synchronized void setOwnURIs(UserUri[] userUriArray) {
+		this.userUriArray = userUriArray;
+		this.length = userUriArray.length;
 	}
-	
-	public OwnURI[] getOwnURIs() {
-		return ownURIArray;
+
+	public UserUri[] getOwnURIs() {
+		return userUriArray;
 	}
 }

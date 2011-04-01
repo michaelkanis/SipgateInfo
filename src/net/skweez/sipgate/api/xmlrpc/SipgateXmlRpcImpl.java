@@ -20,9 +20,9 @@ import java.net.URI;
 import java.util.Map;
 
 import net.skweez.sipgate.api.ISipgateAPI;
-import net.skweez.sipgate.api.OwnURI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
+import net.skweez.sipgate.api.UserUri;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -75,16 +75,26 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		}
 	}
 
-	public OwnURI[] getOwnURIList() {
+	public UserUri[] getOwnURIList() {
 		Map<String, Object> result = (Map<String, Object>) executeMethod("samurai.OwnUriListGet");
-		
-		Log.d("test", result.toString());
-		
-		Log.d("test", (result.get("OwnUriList")).toString());
-		
-		/* this is for test only */
-		OwnURI[] ownURIList_test = new OwnURI[1];
-		ownURIList_test[0] = new OwnURI("test");
-		return ownURIList_test;
+
+		Object[] userUriMap = (Object[]) result.get("OwnUriList");
+		UserUri[] userUriList = new UserUri[userUriMap.length];
+
+		for (int i = 0; i < userUriMap.length; i++) {
+			Map entry = (Map) userUriMap[i];
+			Log.d("test", entry.toString());
+
+			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
+					new Boolean(entry.get("DefaultUri").toString()));
+
+		}
+
+		/*
+		 * Log.d("test", ((String[]) ((Object[]) ((Map) userUriMap[0])
+		 * .get("E164In")))[0].toString());
+		 */
+
+		return userUriList;
 	}
 }
