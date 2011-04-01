@@ -94,17 +94,7 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 	public UserName getUserName() {
 		Map<String, String> result = (Map<String, String>) executeMethod("samurai.UserdataGreetingGet");
 
-		Log.d("test", result.toString());
-
-		Gender gender;
-
-		if (result.get("Gender").equals("male")) {
-			gender = Gender.MALE;
-		} else {
-			gender = Gender.FEMALE;
-		}
-
 		return new UserName(result.get("FirstName"), result.get("LastName"),
-				gender);
+				Gender.fromString(result.get("Gender")));
 	}
 }
