@@ -32,6 +32,9 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
+				.getDefaultSharedPreferences(this)));
 
 		TabHost tabHost = getTabHost();
 		TabHost.TabSpec tabSpec;
@@ -47,8 +50,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
-				.getDefaultSharedPreferences(this)));
+		
 
 		balanceView = (TextView) findViewById(R.id.balanceView);
 		refreshBalance();
@@ -71,7 +73,8 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 			refreshBalance();
 			return true;
 		case R.id.setup:
-			return showSetupActivity();			
+			showSetupActivity();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -86,13 +89,11 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		balance.startRefresh();
 	}
 	
-	private boolean showSetupActivity() {
+	private void showSetupActivity() {
 		Intent intent;
 		
 		intent = new Intent().setClass(this, SetupActivity.class);
 		startActivity(intent);
-		
-		return true;
 	}
 
 	/** Update the view when the balance object updated itself. */
