@@ -10,7 +10,7 @@ import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;
 
 public class CallHistory extends Observable {
-	
+
 	private List<Call> callHistory;
 
 	public void startRefresh() {
@@ -31,14 +31,22 @@ public class CallHistory extends Observable {
 		}.start();
 	}
 
-	public List<Call> getCallHistory() {
-		return callHistory;
-	}
-
 	private void setCallHistory(List<Call> callHistory) {
 		this.callHistory = callHistory;
 		setChanged();
 		notifyObservers();
+	}
+
+	public Call getCall(int index) {
+		return callHistory.get(index);
+	}
+
+	public int size() {
+		if (callHistory == null) {
+			return 0;
+		}
+
+		return callHistory.size();
 	}
 
 }
