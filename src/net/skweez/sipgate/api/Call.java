@@ -10,10 +10,6 @@ public class Call {
 	private static DateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'kk:mm:ssZ");
 
-	public static enum ECallStatus {
-		ACCEPTED, OUTGOING, MISSED
-	}
-
 	private Date timestamp;
 
 	private SipURI localURI;
