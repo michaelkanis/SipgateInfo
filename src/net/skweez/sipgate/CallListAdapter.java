@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.skweez.sipgate.api.Call;
+import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.model.CallHistory;
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -71,8 +72,22 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 
 		holder.numberText.setText(call.getRemoteURI().toString());
 		holder.dateText.setText(call.getTimestamp().toString());
+		holder.callStatusIcon.setImageResource(getImage(call.getStatus()));
 
 		return convertView;
+	}
+
+	private int getImage(ECallStatus status) {
+		switch (status) {
+		case ACCEPTED:
+			return R.drawable.ic_call_log_list_incoming_call;
+		case MISSED:
+			return R.drawable.ic_call_log_list_missed_call;
+		case OUTGOING:
+			return R.drawable.ic_call_log_list_outgoing_call;
+		default:
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public void update(Observable arg0, Object arg1) {
