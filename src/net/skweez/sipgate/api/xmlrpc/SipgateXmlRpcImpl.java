@@ -17,19 +17,24 @@ package net.skweez.sipgate.api.xmlrpc;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
+import net.skweez.sipgate.api.Call;
+import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.api.Gender;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
+import net.skweez.sipgate.api.SipURI;
 import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
-
-import android.util.Log;
 
 /**
  * 
@@ -66,6 +71,39 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 		return new Price((Double) currentBalance.get("TotalIncludingVat"),
 				(String) currentBalance.get("Currency"));
+	}
+
+	public List<Call> getHistoryByDate() {
+		List<Call> callList = new ArrayList<Call>();
+
+		Map result = executeMethod("samurai.HistoryGetByDate");
+		Object[] history = (Object[]) result.get("History");
+
+		for (Object object : history) {
+			callList.add(createCallFromMap((Map) object));
+		}
+
+		Collections.sort(callList, new Comparator<Call>() {
+			public int compare(Call call1, Call call2) {
+				// Sort the list in reverse order (-1), so that the newest call
+				// comes first
+				return call1.getTimestamp().compareTo(call2.getTimestamp())
+						* (-1);
+			}
+		});
+
+		return callList;
+	}
+
+	private Call createCallFromMap(Map map) {
+		Call call = new Call();
+
+		call.setLocalURI(new SipURI((String) map.get("LocalUri")));
+		call.setRemoteURI(new SipURI((String) map.get("RemoteUri")));
+		call.setStatus(ECallStatus.fromString((String) map.get("Status")));
+		call.setTimestamp((String) map.get("Timestamp"));
+
+		return call;
 	}
 
 	public UserUri[] getUserUriList() {

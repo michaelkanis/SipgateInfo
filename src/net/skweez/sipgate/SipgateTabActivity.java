@@ -45,7 +45,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		intent = new Intent().setClass(this, CallsListActivity.class);
+		intent = new Intent().setClass(this, CallHistoryActivity.class);
 		tabSpec = tabHost.newTabSpec("calls").setIndicator("Calls")
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
