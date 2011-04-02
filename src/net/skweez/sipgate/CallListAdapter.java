@@ -3,6 +3,7 @@ package net.skweez.sipgate;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.model.CallHistory;
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -66,14 +67,16 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		holder.numberText.setText(callHistory.getCall(position).getRemoteURI()
-				.toString());
+		Call call = callHistory.getCall(position);
+
+		holder.numberText.setText(call.getRemoteURI().toString());
+		holder.dateText.setText(call.getTimestamp().toString());
 
 		return convertView;
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		// FIXME call from correct thread
+		// call from UI thread, or it will crash
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
 				notifyDataSetChanged();

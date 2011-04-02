@@ -33,8 +33,6 @@ import net.skweez.sipgate.api.UserUri;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import android.util.Log;
-
 /**
  * 
  * @author mks
@@ -74,29 +72,26 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 	public List<Call> getHistoryByDate() {
 		List<Call> callList = new ArrayList<Call>();
-		
+
 		Map result = executeMethod("samurai.HistoryGetByDate");
 		Object[] history = (Object[]) result.get("History");
-		
+
 		for (Object object : history) {
 			callList.add(createCallFromMap((Map) object));
 		}
-		
+
 		return callList;
 	}
-	
+
 	private Call createCallFromMap(Map map) {
 		Call call = new Call();
-		
+
 		call.setLocalURI(new SipURI((String) map.get("LocalUri")));
 		call.setRemoteURI(new SipURI((String) map.get("RemoteUri")));
-		
-//		System.out.println("Type of Status: " + map.get("Status").getClass().getName());
-//		System.out.println("Type of Timestamp: " + map.get("Timestamp").getClass().getName());
-		
-//		call.setStatus(map.get("Status"));
-//		call.setTimestamp(timestamp);
-		
+
+		// call.setStatus(map.get("Status"));
+		call.setTimestamp((String) map.get("Timestamp"));
+
 		return call;
 	}
 
