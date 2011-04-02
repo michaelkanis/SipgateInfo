@@ -7,6 +7,9 @@ import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.model.CallHistory;
 import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.Contacts;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +73,48 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 
 		Call call = callHistory.getCall(position);
 
-		holder.numberText.setText(call.getRemoteURI().toString());
+		holder.numberText.setText(getContactNameFromNumber(call.getRemoteURI()
+				.toString()));
 		holder.dateText.setText(call.getTimestamp().toString());
 		holder.callStatusIcon.setImageResource(getImage(call.getStatus()));
 
 		return convertView;
+	}
+
+	/**
+	 * Code just stolen from
+	 * http://www.vbsteven.be/blog/android-getting-the-contact-name-of-
+	 * a-phone-number/
+	 * 
+	 * TODO Understand ;) and rewrite this method with new API to fix
+	 * deprecation.
+	 * 
+	 * @param number
+	 * @return
+	 */
+	private String getContactNameFromNumber(String number) {
+		// define the columns I want the query to return
+		String[] projection = new String[] { Contacts.Phones.DISPLAY_NAME,
+				Contacts.Phones.NUMBER };
+
+		// encode the phone number and build the filter URI
+		Uri contactUri = Uri.withAppendedPath(
+				Contacts.Phones.CONTENT_FILTER_URL, Uri.encode(number));
+
+		// query time
+		Cursor c = activity.getContentResolver().query(contactUri, projection,
+				null, null, null);
+
+		// if the query returns 1 or more results
+		// return the first result
+		if (c.moveToFirst()) {
+			String name = c.getString(c
+					.getColumnIndex(Contacts.Phones.DISPLAY_NAME));
+			return name;
+		}
+
+		// return the original number if no match was found
+		return number;
 	}
 
 	private int getImage(ECallStatus status) {
