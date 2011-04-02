@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.skweez.sipgate.api.Call;
+import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.api.Gender;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
@@ -99,8 +100,7 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 		call.setLocalURI(new SipURI((String) map.get("LocalUri")));
 		call.setRemoteURI(new SipURI((String) map.get("RemoteUri")));
-
-		// call.setStatus(map.get("Status"));
+		call.setStatus(ECallStatus.fromString((String) map.get("Status")));
 		call.setTimestamp((String) map.get("Timestamp"));
 
 		return call;
