@@ -18,6 +18,8 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +81,15 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		for (Object object : history) {
 			callList.add(createCallFromMap((Map) object));
 		}
+
+		Collections.sort(callList, new Comparator<Call>() {
+			public int compare(Call call1, Call call2) {
+				// Sort the list in reverse order (-1), so that the newest call
+				// comes first
+				return call1.getTimestamp().compareTo(call2.getTimestamp())
+						* (-1);
+			}
+		});
 
 		return callList;
 	}
