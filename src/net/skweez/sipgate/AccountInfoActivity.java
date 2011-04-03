@@ -12,20 +12,50 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class AccountInfoActivity extends Activity {
+public class AccountInfoActivity extends Activity implements Observer {
+
+	private UserInfos userInfos;
+	private TextView userNameView;
+	private TextView sipIdView;
+	private TextView phonenumberView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// setListAdapter(new UserInfoAdapter(this));
 		setContentView(R.layout.accountinfo);
 
+		userNameView = (TextView) findViewById(R.id.userName);
+		sipIdView = (TextView) findViewById(R.id.sipid);
+		phonenumberView = (TextView) findViewById(R.id.phonenumber);
+
+		getUserInfo();
+	}
+
+	private void getUserInfo() {
+		userInfos = new UserInfos();
+		userInfos.addObserver(this);
+		userInfos.startRefresh();
+	}
+
+	public void update(Observable observable, Object data) {
+		if (observable instanceof UserInfos) {
+			this.runOnUiThread(new Runnable() {
+				public void run() {
+					userNameView.setText("Hello, "
+							+ userInfos.getUserName().firstName + " "
+							+ userInfos.getUserName().lastName);
+					sipIdView.setText(userInfos.getUserUriArray()[0].sipUri);
+					phonenumberView.setText("+"
+							+ userInfos.getUserUriArray()[0].e164Out);
+
+				}
+			});
+		}
 	}
 
 	private class UserInfoAdapter extends BaseAdapter implements Observer {
 
-		private UserInfos userInfos;
 		private Activity mActivity;
 		private LayoutInflater mInfalter;
 

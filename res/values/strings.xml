@@ -4,4 +4,6 @@
     <string name="menuitem.setup">Setup</string>
     <string name="menuitem.refresh">Refresh</string>
     <string name="account.phoneOut">Phone Number:</string>
+    <string name="account.sipid">sipgate ID:</string>
+    <string name="loading">Loading …</string>
 </resources>
