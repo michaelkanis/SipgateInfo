@@ -1,5 +1,7 @@
 package net.skweez.sipgate;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -31,6 +33,8 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 
 	private final Activity activity;
 
+	private final Map<String, String> contactNamesCache;
+
 	public CallListAdapter(Activity activity, CallHistory callHistory) {
 		this.activity = activity;
 		this.callHistory = callHistory;
@@ -38,6 +42,8 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 		callHistory.addObserver(this);
 
 		inflater = LayoutInflater.from(activity);
+
+		contactNamesCache = new HashMap<String, String>();
 	}
 
 	public int getCount() {
@@ -93,6 +99,12 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 	 * @return
 	 */
 	private String getContactNameFromNumber(String number) {
+
+		String name = contactNamesCache.get(number);
+		if (name != null) {
+			return name;
+		}
+
 		// define the columns I want the query to return
 		String[] projection = new String[] { Contacts.Phones.DISPLAY_NAME,
 				Contacts.Phones.NUMBER };
@@ -101,15 +113,14 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 		Uri contactUri = Uri.withAppendedPath(
 				Contacts.Phones.CONTENT_FILTER_URL, Uri.encode(number));
 
-		// query time
+		// query
 		Cursor c = activity.getContentResolver().query(contactUri, projection,
 				null, null, null);
 
-		// if the query returns 1 or more results
-		// return the first result
+		// returns the first result if the query returns 1 or more results
 		if (c.moveToFirst()) {
-			String name = c.getString(c
-					.getColumnIndex(Contacts.Phones.DISPLAY_NAME));
+			name = c.getString(c.getColumnIndex(Contacts.Phones.DISPLAY_NAME));
+			contactNamesCache.put(number, name);
 			return name;
 		}
 
