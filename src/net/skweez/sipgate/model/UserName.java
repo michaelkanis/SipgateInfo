@@ -1,4 +1,6 @@
-package net.skweez.sipgate.api;
+package net.skweez.sipgate.model;
+
+import net.skweez.sipgate.api.Gender;
 
 public class UserName {
 	public String firstName;

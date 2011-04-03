@@ -4,7 +4,6 @@ import java.util.Observable;
 
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.SipgateException;
-import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;

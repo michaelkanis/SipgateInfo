@@ -30,8 +30,8 @@ import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipURI;
 import net.skweez.sipgate.api.SipgateException;
-import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
+import net.skweez.sipgate.model.UserName;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
