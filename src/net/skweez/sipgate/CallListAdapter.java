@@ -11,7 +11,7 @@ import net.skweez.sipgate.model.CallHistory;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.Contacts;
+import android.provider.ContactsContract.PhoneLookup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,15 +88,16 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 	}
 
 	/**
-	 * Code just stolen from
+	 * Returns the display name for a given phone number.
+	 * 
+	 * Code initially copied from
 	 * http://www.vbsteven.be/blog/android-getting-the-contact-name-of-
 	 * a-phone-number/
 	 * 
-	 * TODO Understand ;) and rewrite this method with new API to fix
-	 * deprecation.
-	 * 
 	 * @param number
-	 * @return
+	 *            The phone number to look up.
+	 * @return The first name for the given number, if more than one exist.
+	 *         <code>number</code> if the name was not found.
 	 */
 	private String getContactNameFromNumber(String number) {
 
@@ -105,21 +106,17 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 			return name;
 		}
 
-		// define the columns I want the query to return
-		String[] projection = new String[] { Contacts.Phones.DISPLAY_NAME,
-				Contacts.Phones.NUMBER };
+		// define what the query should return
+		String[] projection = new String[] { PhoneLookup.DISPLAY_NAME };
 
-		// encode the phone number and build the filter URI
-		Uri contactUri = Uri.withAppendedPath(
-				Contacts.Phones.CONTENT_FILTER_URL, Uri.encode(number));
+		Uri contactUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
+				Uri.encode(number));
 
-		// query
 		Cursor c = activity.getContentResolver().query(contactUri, projection,
 				null, null, null);
 
-		// returns the first result if the query returns 1 or more results
 		if (c.moveToFirst()) {
-			name = c.getString(c.getColumnIndex(Contacts.Phones.DISPLAY_NAME));
+			name = c.getString(c.getColumnIndex(PhoneLookup.DISPLAY_NAME));
 			contactNamesCache.put(number, name);
 			return name;
 		}
