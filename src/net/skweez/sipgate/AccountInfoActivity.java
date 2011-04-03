@@ -41,9 +41,9 @@ public class AccountInfoActivity extends Activity implements Observer {
 					userNameView.setText("Hello, "
 							+ userInfos.getUserName().firstName + " "
 							+ userInfos.getUserName().lastName);
-					sipIdView.setText(userInfos.getUserUriArray()[0].sipUri);
+					sipIdView.setText(userInfos.getDefaultUserUri().sipUri);
 					phonenumberView.setText("+"
-							+ userInfos.getUserUriArray()[0].e164Out);
+							+ userInfos.getDefaultUserUri().e164Out);
 
 				}
 			});

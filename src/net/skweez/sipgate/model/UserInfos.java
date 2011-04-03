@@ -53,6 +53,15 @@ public class UserInfos extends Observable {
 		return userUriArray;
 	}
 
+	public UserUri getDefaultUserUri() {
+		for (int i = 0; i < userUriArray.length; i++) {
+			if (userUriArray[i].defaultUri)
+				return userUriArray[i];
+		}
+		// if there is no default userUri, we return the first one in the array
+		return userUriArray[0];
+	}
+
 	public UserName getUserName() {
 		return userName;
 	}
