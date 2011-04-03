@@ -115,11 +115,9 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		for (int i = 0; i < userUriMap.length; i++) {
 			Map entry = (Map) userUriMap[i];
 
-			SipURI sipUri = new SipURI(entry.get("SipUri").toString());
-
 			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
-					sipUri.getNumber(), new Boolean(entry.get("DefaultUri")
-							.toString()));
+					new SipURI(entry.get("SipUri").toString()), new Boolean(
+							entry.get("DefaultUri").toString()));
 		}
 		return userUriList;
 	}
