@@ -3,6 +3,7 @@
 	package="net.skweez.sipgate" android:versionCode="1"
 	android:versionName="1.0">
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 
 
 	<application android:icon="@drawable/appicon"
@@ -14,7 +15,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="SetupActivity"></activity>
-		<activity android:name="CallsListActivity"></activity>
+		<activity android:name="CallHistoryActivity"></activity>
 		<activity android:name="AccountInfoActivity"></activity>
 
 	</application>

@@ -1,5 +1,8 @@
 package net.skweez.sipgate.api;
 
+import java.util.List;
+
+
 /**
  * 
  * @author mks
@@ -10,6 +13,8 @@ package net.skweez.sipgate.api;
 public interface ISipgateAPI {
 
 	public Price getBalance();
+	
+	public List<Call> getHistoryByDate();
 
 	public UserUri[] getUserUriList();
 
