@@ -44,7 +44,10 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		Intent intent;
 
 		intent = new Intent().setClass(this, AccountInfoActivity.class);
-		tabSpec = tabHost.newTabSpec("account").setIndicator("Account")
+		tabSpec = tabHost
+				.newTabSpec("account")
+				.setIndicator("Account",
+						resources.getDrawable(R.drawable.ic_tab_account))
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
