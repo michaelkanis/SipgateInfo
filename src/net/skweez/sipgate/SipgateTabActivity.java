@@ -7,6 +7,7 @@ import java.util.Observer;
 import net.skweez.sipgate.model.Balance;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -32,7 +33,9 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
+		Resources resources = getResources();
+
 		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
 				.getDefaultSharedPreferences(this)));
 
@@ -46,11 +49,12 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		tabHost.addTab(tabSpec);
 
 		intent = new Intent().setClass(this, CallHistoryActivity.class);
-		tabSpec = tabHost.newTabSpec("calls").setIndicator("Calls")
+		tabSpec = tabHost
+				.newTabSpec("calls")
+				.setIndicator("Calls",
+						resources.getDrawable(R.drawable.ic_tab_recent))
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
-
-		
 
 		balanceView = (TextView) findViewById(R.id.balanceView);
 		refreshBalance();
@@ -88,10 +92,10 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		balance.addObserver(this);
 		balance.startRefresh();
 	}
-	
+
 	private void showSetupActivity() {
 		Intent intent;
-		
+
 		intent = new Intent().setClass(this, SetupActivity.class);
 		startActivity(intent);
 	}
