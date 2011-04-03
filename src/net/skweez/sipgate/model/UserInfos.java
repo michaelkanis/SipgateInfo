@@ -14,12 +14,6 @@ public class UserInfos extends Observable {
 	private UserName userName;
 	private UserUri[] userUriArray;
 
-	public int length;
-
-	public UserInfos() {
-		length = 0;
-	}
-
 	public void startRefresh() {
 
 		new Thread() {
@@ -43,7 +37,6 @@ public class UserInfos extends Observable {
 			UserName userName) {
 		this.userUriArray = userUriArray;
 		this.userName = userName;
-		this.length = userUriArray.length + 1;
 
 		setChanged();
 		notifyObservers();
