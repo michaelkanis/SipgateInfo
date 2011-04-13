@@ -5,13 +5,15 @@
 	<LinearLayout android:id="@+id/linearLayout1"
 		android:layout_alignParentBottom="true" android:layout_height="wrap_content"
 		android:layout_width="fill_parent" android:background="#525552">
-		<ImageView android:layout_width="wrap_content" android:src="@drawable/sipgatelogo"
+		<ImageView android:layout_width="wrap_content" android:src="@drawable/ic_launcher_sipgate"
 			android:id="@+id/imageView1" android:layout_height="wrap_content" android:padding="15dip"></ImageView>
 		<TextView android:layout_width="fill_parent"
 			android:paddingLeft="10dip" android:padding="10dip"
 			android:layout_height="fill_parent" android:id="@+id/balanceView"
 			android:gravity="center_vertical"
-			android:text="balanceView" android:textSize="8pt"></TextView>
+			android:text="Loading …"
+			android:textSize="20sp"
+			android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 	</LinearLayout>
 	<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@android:id/tabhost" android:layout_width="fill_parent"

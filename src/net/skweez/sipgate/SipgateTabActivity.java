@@ -89,8 +89,6 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 	/** Tells the balance object to refresh itself. */
 	private void refreshBalance() {
-		balanceView.setText("Loading …");
-
 		Balance balance = new Balance();
 		balance.addObserver(this);
 		balance.startRefresh();
