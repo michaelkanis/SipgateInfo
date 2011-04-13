@@ -6,4 +6,7 @@
     <string name="account.phoneOut">Phone Number:</string>
     <string name="account.sipid">sipgate ID:</string>
     <string name="loading">Loading …</string>
+    <string name="settings">Settings</string>
+    <string name="version">Version</string>
+    <string name="version_key">versionKey</string>
 </resources>
