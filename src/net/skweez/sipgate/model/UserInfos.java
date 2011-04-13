@@ -4,7 +4,6 @@ import java.util.Observable;
 
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.SipgateException;
-import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;
@@ -13,12 +12,6 @@ public class UserInfos extends Observable {
 
 	private UserName userName;
 	private UserUri[] userUriArray;
-
-	public int length;
-
-	public UserInfos() {
-		length = 0;
-	}
 
 	public void startRefresh() {
 
@@ -43,7 +36,6 @@ public class UserInfos extends Observable {
 			UserName userName) {
 		this.userUriArray = userUriArray;
 		this.userName = userName;
-		this.length = userUriArray.length + 1;
 
 		setChanged();
 		notifyObservers();
@@ -51,6 +43,15 @@ public class UserInfos extends Observable {
 
 	public UserUri[] getUserUriArray() {
 		return userUriArray;
+	}
+
+	public UserUri getDefaultUserUri() {
+		for (int i = 0; i < userUriArray.length; i++) {
+			if (userUriArray[i].defaultUri)
+				return userUriArray[i];
+		}
+		// if there is no default userUri, we return the first one in the array
+		return userUriArray[0];
 	}
 
 	public UserName getUserName() {
