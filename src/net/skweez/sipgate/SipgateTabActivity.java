@@ -1,15 +1,14 @@
 package net.skweez.sipgate;
 
-import java.net.Authenticator;
 import java.util.Observable;
 import java.util.Observer;
 
 import net.skweez.sipgate.model.Balance;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,15 +32,29 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		initializeUi();
+		refreshBalance();
+	}
 
-		Resources resources = getResources();
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.main);
+		initializeUi();
+		refreshBalance();
+	}
 
-		Authenticator.setDefault(new PreferencesAuthenticator(PreferenceManager
-				.getDefaultSharedPreferences(this)));
+	private void initializeUi() {
+		initializeTabs();
+		balanceView = (TextView) findViewById(R.id.balanceView);
+	}
 
+	private void initializeTabs() {
 		TabHost tabHost = getTabHost();
 		TabHost.TabSpec tabSpec;
 		Intent intent;
+
+		Resources resources = getResources();
 
 		intent = new Intent().setClass(this, AccountInfoActivity.class);
 		tabSpec = tabHost
@@ -58,9 +71,6 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 						resources.getDrawable(R.drawable.ic_tab_recent))
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
-
-		balanceView = (TextView) findViewById(R.id.balanceView);
-		refreshBalance();
 	}
 
 	/** {@inheritDoc} */
