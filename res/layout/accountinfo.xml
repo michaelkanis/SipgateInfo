@@ -34,4 +34,16 @@
 			android:layout_height="wrap_content" android:id="@android:id/text2" />
 	</TwoLineListItem>
 
+	<TwoLineListItem android:id="@+id/account_balance"
+		android:mode="twoLine" android:layout_height="wrap_content"
+		android:layout_width="fill_parent">
+		<TextView android:textAppearance="?android:attr/textAppearanceLarge"
+			android:id="@android:id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="Account balance" />
+		<TextView android:layout_below="@android:id/text1"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_alignLeft="@android:id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@android:id/text2" />
+	</TwoLineListItem>
+
 </LinearLayout>
