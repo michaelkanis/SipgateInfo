@@ -40,14 +40,15 @@ public class AccountInfoActivity extends Activity implements Observer {
 		if (observable instanceof UserInfos) {
 			this.runOnUiThread(new Runnable() {
 				public void run() {
-					userNameView.setText(userInfos.getUserName().toString());
-					sipIdView.setText(userInfos.getDefaultUserUri().sipUri
-							.getNumber());
-					phoneNumberView.setText("+"
-							+ userInfos.getDefaultUserUri().e164Out);
-
+					updateUserInfos();
 				}
 			});
 		}
+	}
+
+	private void updateUserInfos() {
+		userNameView.setText(userInfos.getUserName().toString());
+		sipIdView.setText(userInfos.getDefaultUserUri().sipUri.getNumber());
+		phoneNumberView.setText("+" + userInfos.getDefaultUserUri().e164Out);
 	}
 }
