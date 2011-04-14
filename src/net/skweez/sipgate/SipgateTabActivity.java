@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.skweez.sipgate.model.Balance;
+import net.skweez.sipgate.model.CallHistory;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,7 +13,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 
 /**
@@ -64,12 +68,10 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		intent = new Intent().setClass(this, CallHistoryActivity.class);
-		tabSpec = tabHost
-				.newTabSpec("calls")
-				.setIndicator("Calls",
-						resources.getDrawable(R.drawable.ic_tab_recent))
-				.setContent(intent);
+		tabSpec = tabHost.newTabSpec(getString(R.string.call_tab_tag));
+		tabSpec.setIndicator(getString(R.string.call_tab_name),
+				resources.getDrawable(R.drawable.ic_tab_recent));
+		tabSpec.setContent(new MyTabContentFactory());
 		tabHost.addTab(tabSpec);
 	}
 
@@ -121,5 +123,27 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 				}
 			});
 		}
+	}
+
+	private class MyTabContentFactory implements TabContentFactory {
+
+		public View createTabContent(String tag) {
+
+			if (tag.equals(getString(R.string.call_tab_tag))) {
+				return createCallList();
+			}
+
+			throw new IllegalArgumentException();
+		}
+
+		private ListView createCallList() {
+			ListView callList = new ListView(getApplicationContext());
+			CallHistory history = new CallHistory();
+			callList.setAdapter(new CallListAdapter(SipgateTabActivity.this,
+					history));
+			history.startRefresh();
+			return callList;
+		}
+
 	}
 }
