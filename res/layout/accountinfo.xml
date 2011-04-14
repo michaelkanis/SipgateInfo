@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
-	<TextView android:layout_margin="3dip" android:id="@+id/userName"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:textSize="20sp" android:text="@string/loading"></TextView>
+
+	<TextView android:id="@+id/userName" android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:text="@string/loading"></TextView>
 
 	<View android:background="#ccc" android:layout_height="1dip"
 		android:id="@+id/View01" android:layout_width="fill_parent"></View>
@@ -20,20 +22,16 @@
 			android:layout_height="wrap_content" android:id="@android:id/text2" />
 	</TwoLineListItem>
 
-	<TableLayout android:layout_height="wrap_content"
-		android:id="@+id/tableLayout1" android:layout_width="fill_parent"
-		android:shrinkColumns="1" android:stretchColumns="1">
-		<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow2"
-			android:layout_width="fill_parent">
-			<TextView android:id="@+id/textView3" android:layout_height="wrap_content"
-				android:layout_width="wrap_content" android:textSize="20sp"
-				android:text="@string/account.phoneOut" android:layout_margin="3dip"></TextView>
-			<TextView android:layout_height="wrap_content"
-				android:gravity="right" android:textSize="20sp"
-				android:layout_width="wrap_content" android:singleLine="true"
-				android:ellipsize="middle" android:id="@+id/phonenumber"
-				android:layout_margin="3dip" android:text="@string/loading"
-				android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
-		</TableRow>
-	</TableLayout>
+	<TwoLineListItem android:id="@+id/phone_number"
+		android:mode="twoLine" android:layout_height="wrap_content"
+		android:layout_width="fill_parent">
+		<TextView android:textAppearance="?android:attr/textAppearanceLarge"
+			android:id="@android:id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="Phone number" />
+		<TextView android:layout_below="@android:id/text1"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_alignLeft="@android:id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@android:id/text2" />
+	</TwoLineListItem>
+
 </LinearLayout>

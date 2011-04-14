@@ -14,7 +14,7 @@ public class AccountInfoActivity extends Activity implements Observer {
 	private UserInfos userInfos;
 	private TextView userNameView;
 	private TextView sipIdView;
-	private TextView phonenumberView;
+	private TextView phoneNumberView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,8 @@ public class AccountInfoActivity extends Activity implements Observer {
 
 		userNameView = (TextView) findViewById(R.id.userName);
 		sipIdView = ((TwoLineListItem) findViewById(R.id.sip_id)).getText2();
-		phonenumberView = (TextView) findViewById(R.id.phonenumber);
+		phoneNumberView = ((TwoLineListItem) findViewById(R.id.phone_number))
+				.getText2();
 
 		getUserInfo();
 	}
@@ -44,7 +45,7 @@ public class AccountInfoActivity extends Activity implements Observer {
 							+ userInfos.getUserName().getLastName());
 					sipIdView.setText(userInfos.getDefaultUserUri().sipUri
 							.getNumber());
-					phonenumberView.setText("+"
+					phoneNumberView.setText("+"
 							+ userInfos.getDefaultUserUri().e164Out);
 
 				}
