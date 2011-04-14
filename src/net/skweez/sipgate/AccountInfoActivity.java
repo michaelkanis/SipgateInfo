@@ -11,7 +11,6 @@ import android.widget.TwoLineListItem;
 
 public class AccountInfoActivity extends Activity implements Observer {
 
-	private UserInfos userInfos;
 	private TextView userNameView;
 	private TextView sipIdView;
 	private TextView phoneNumberView;
@@ -31,22 +30,22 @@ public class AccountInfoActivity extends Activity implements Observer {
 	}
 
 	private void refreshUserInfos() {
-		userInfos = new UserInfos();
+		UserInfos userInfos = new UserInfos();
 		userInfos.addObserver(this);
 		userInfos.startRefresh();
 	}
 
-	public void update(Observable observable, Object data) {
+	public void update(final Observable observable, Object data) {
 		if (observable instanceof UserInfos) {
 			this.runOnUiThread(new Runnable() {
 				public void run() {
-					updateUserInfos();
+					updateUserInfos((UserInfos) observable);
 				}
 			});
 		}
 	}
 
-	private void updateUserInfos() {
+	private void updateUserInfos(final UserInfos userInfos) {
 		userNameView.setText(userInfos.getUserName().toString());
 		sipIdView.setText(userInfos.getDefaultUserUri().sipUri.getNumber());
 		phoneNumberView.setText("+" + userInfos.getDefaultUserUri().e164Out);
