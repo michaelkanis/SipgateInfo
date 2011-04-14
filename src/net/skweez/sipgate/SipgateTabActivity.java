@@ -36,9 +36,11 @@ public class SipgateTabActivity extends TabActivity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		int currentTab = getTabHost().getCurrentTab();
 		super.onConfigurationChanged(newConfig);
 		setContentView(R.layout.main);
 		initializeUi();
+		getTabHost().setCurrentTab(currentTab);
 		refresh();
 	}
 
