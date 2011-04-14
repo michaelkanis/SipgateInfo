@@ -27,10 +27,10 @@ public class AccountInfoActivity extends Activity implements Observer {
 		phoneNumberView = ((TwoLineListItem) findViewById(R.id.phone_number))
 				.getText2();
 
-		getUserInfo();
+		refreshUserInfos();
 	}
 
-	private void getUserInfo() {
+	private void refreshUserInfos() {
 		userInfos = new UserInfos();
 		userInfos.addObserver(this);
 		userInfos.startRefresh();
