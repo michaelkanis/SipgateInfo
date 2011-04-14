@@ -1,9 +1,5 @@
 package net.skweez.sipgate;
 
-import java.util.Observable;
-import java.util.Observer;
-
-import net.skweez.sipgate.model.Balance;
 import net.skweez.sipgate.model.CallHistory;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -17,7 +13,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
-import android.widget.TextView;
 
 /**
  * 
@@ -26,10 +21,7 @@ import android.widget.TextView;
  * @version $Rev: 9 $
  * @levd.rating RED Rev:
  */
-public class SipgateTabActivity extends TabActivity implements Observer {
-
-	/** The view that shows the account balance. */
-	private TextView balanceView;
+public class SipgateTabActivity extends TabActivity {
 
 	private final CallHistory history = new CallHistory();
 
@@ -52,7 +44,6 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 	private void initializeUi() {
 		initializeTabs();
-		balanceView = (TextView) findViewById(R.id.balanceView);
 	}
 
 	private void initializeTabs() {
@@ -102,15 +93,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	}
 
 	private void refresh() {
-		refreshBalance();
 		history.startRefresh();
-	}
-
-	/** Tells the balance object to refresh itself. */
-	private void refreshBalance() {
-		Balance balance = new Balance();
-		balance.addObserver(this);
-		balance.startRefresh();
 	}
 
 	private void showSetupActivity() {
@@ -118,18 +101,6 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 		intent = new Intent().setClass(this, SetupActivity.class);
 		startActivity(intent);
-	}
-
-	/** Update the view when the balance object updated itself. */
-	public void update(final Observable observable, final Object data) {
-		if (observable instanceof Balance) {
-			balanceView.post(new Runnable() {
-				public void run() {
-					balanceView.setText(((Balance) observable).getBalance()
-							.toString());
-				}
-			});
-		}
 	}
 
 	private class MyTabContentFactory implements TabContentFactory {
