@@ -5,23 +5,24 @@
 	<TextView android:layout_margin="3dip" android:id="@+id/userName"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
 		android:textSize="20sp" android:text="@string/loading"></TextView>
-	<View android:background="#ccc" android:layout_height="2dip"
+
+	<View android:background="#ccc" android:layout_height="1dip"
 		android:id="@+id/View01" android:layout_width="fill_parent"></View>
+
+	<TwoLineListItem android:id="@+id/sip_id" android:mode="twoLine"
+		android:layout_height="wrap_content" android:layout_width="fill_parent">
+		<TextView android:textAppearance="?android:attr/textAppearanceLarge"
+			android:id="@android:id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="Customer number" />
+		<TextView android:layout_below="@android:id/text1"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_alignLeft="@android:id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@android:id/text2" />
+	</TwoLineListItem>
+
 	<TableLayout android:layout_height="wrap_content"
 		android:id="@+id/tableLayout1" android:layout_width="fill_parent"
 		android:shrinkColumns="1" android:stretchColumns="1">
-		<TableRow android:id="@+id/tableRow1" android:layout_height="wrap_content"
-			android:layout_width="fill_parent">
-			<TextView android:id="@+id/textView1" android:layout_height="wrap_content"
-				android:layout_width="wrap_content" android:textSize="20sp"
-				android:text="@string/account.sipid" android:layout_margin="3dip"></TextView>
-			<TextView android:layout_height="wrap_content"
-				android:gravity="right" android:textSize="20sp"
-				android:layout_width="wrap_content" android:singleLine="true"
-				android:ellipsize="end" android:id="@+id/sipid"
-				android:layout_margin="3dip" android:text="@string/loading"
-				android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
-		</TableRow>
 		<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow2"
 			android:layout_width="fill_parent">
 			<TextView android:id="@+id/textView3" android:layout_height="wrap_content"
@@ -35,6 +36,4 @@
 				android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 		</TableRow>
 	</TableLayout>
-	<View android:background="#ccc" android:layout_height="2dip"
-		android:id="@+id/view1" android:layout_width="fill_parent"></View>
 </LinearLayout>

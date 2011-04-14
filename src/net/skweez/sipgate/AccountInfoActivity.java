@@ -7,6 +7,7 @@ import net.skweez.sipgate.model.UserInfos;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.TwoLineListItem;
 
 public class AccountInfoActivity extends Activity implements Observer {
 
@@ -22,7 +23,7 @@ public class AccountInfoActivity extends Activity implements Observer {
 		setContentView(R.layout.accountinfo);
 
 		userNameView = (TextView) findViewById(R.id.userName);
-		sipIdView = (TextView) findViewById(R.id.sipid);
+		sipIdView = ((TwoLineListItem) findViewById(R.id.sip_id)).getText2();
 		phonenumberView = (TextView) findViewById(R.id.phonenumber);
 
 		getUserInfo();
