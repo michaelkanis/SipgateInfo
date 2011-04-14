@@ -40,9 +40,7 @@ public class AccountInfoActivity extends Activity implements Observer {
 		if (observable instanceof UserInfos) {
 			this.runOnUiThread(new Runnable() {
 				public void run() {
-					userNameView.setText("Hello, "
-							+ userInfos.getUserName().getFirstName() + " "
-							+ userInfos.getUserName().getLastName());
+					userNameView.setText(userInfos.getUserName().toString());
 					sipIdView.setText(userInfos.getDefaultUserUri().sipUri
 							.getNumber());
 					phoneNumberView.setText("+"
