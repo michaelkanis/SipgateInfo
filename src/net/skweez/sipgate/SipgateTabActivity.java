@@ -31,6 +31,8 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	/** The view that shows the account balance. */
 	private TextView balanceView;
 
+	private CallHistory history;
+
 	/** {@inheritDoc} */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,13 +138,18 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 			throw new IllegalArgumentException();
 		}
 
-		private ListView createCallList() {
-			ListView callList = new ListView(getApplicationContext());
-			CallHistory history = new CallHistory();
-			callList.setAdapter(new CallListAdapter(SipgateTabActivity.this,
+		private View createCallList() {
+			ListView view = new ListView(getApplicationContext());
+
+			if (history == null) {
+				history = new CallHistory();
+				history.startRefresh();
+			}
+
+			view.setAdapter(new CallListAdapter(SipgateTabActivity.this,
 					history));
-			history.startRefresh();
-			return callList;
+
+			return view;
 		}
 
 	}
