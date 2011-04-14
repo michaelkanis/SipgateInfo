@@ -31,7 +31,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	/** The view that shows the account balance. */
 	private TextView balanceView;
 
-	private CallHistory history;
+	private final CallHistory history = new CallHistory();
 
 	/** {@inheritDoc} */
 	@Override
@@ -39,7 +39,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initializeUi();
-		refreshBalance();
+		refresh();
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		super.onConfigurationChanged(newConfig);
 		setContentView(R.layout.main);
 		initializeUi();
-		refreshBalance();
+		refresh();
 	}
 
 	private void initializeUi() {
@@ -91,7 +91,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			refreshBalance();
+			refresh();
 			return true;
 		case R.id.setup:
 			showSetupActivity();
@@ -99,6 +99,11 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void refresh() {
+		refreshBalance();
+		history.startRefresh();
 	}
 
 	/** Tells the balance object to refresh itself. */
@@ -140,12 +145,6 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 		private View createCallList() {
 			ListView view = new ListView(getApplicationContext());
-
-			if (history == null) {
-				history = new CallHistory();
-				history.startRefresh();
-			}
-
 			view.setAdapter(new CallListAdapter(SipgateTabActivity.this,
 					history));
 
