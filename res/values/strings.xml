@@ -11,4 +11,6 @@
     <string name="version_key">versionKey</string>
     <string name="call_tab_tag">calls</string>
     <string name="call_tab_name">Calls</string>
+    <string name="accounts_tab_tag">accounts</string>
+    <string name="accounts_tab_name">Accounts</string>
 </resources>
