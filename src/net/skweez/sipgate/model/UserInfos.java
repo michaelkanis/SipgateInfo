@@ -8,6 +8,10 @@ import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;
 
+/**
+ * @author Florian Mutter
+ * @author Michael Kanis
+ */
 public class UserInfos extends Observable {
 
 	private UserName userName;

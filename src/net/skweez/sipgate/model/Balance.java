@@ -9,11 +9,7 @@ import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
 import android.util.Log;
 
 /**
- * 
- * @author mks
- * @author $Author: mks $
- * @version $Rev: 9 $
- * @levd.rating RED Rev:
+ * @author Michael Kanis
  */
 public class Balance extends Observable {
 

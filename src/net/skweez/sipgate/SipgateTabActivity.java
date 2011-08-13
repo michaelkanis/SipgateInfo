@@ -15,11 +15,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 
 /**
- * 
- * @author mks
- * @author $Author: mks $
- * @version $Rev: 9 $
- * @levd.rating RED Rev:
+ * @author Michael Kanis
  */
 public class SipgateTabActivity extends TabActivity {
 
@@ -54,11 +50,10 @@ public class SipgateTabActivity extends TabActivity {
 		Resources resources = getResources();
 
 		intent = new Intent().setClass(this, AccountInfoActivity.class);
-		tabSpec = tabHost
-				.newTabSpec("account")
-				.setIndicator("Account",
-						resources.getDrawable(R.drawable.ic_tab_account))
-				.setContent(intent);
+		tabSpec = tabHost.newTabSpec("account");
+		tabSpec.setIndicator("Account",
+				resources.getDrawable(R.drawable.ic_tab_account));
+		tabSpec.setContent(intent);
 		tabHost.addTab(tabSpec);
 
 		tabSpec = tabHost.newTabSpec(getString(R.string.call_tab_tag));

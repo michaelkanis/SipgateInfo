@@ -1,5 +1,8 @@
 package net.skweez.sipgate.api;
 
+/**
+ * @author Florian Mutter
+ */
 public class UserUri {
 	public String e164Out;
 	public SipURI sipUri;

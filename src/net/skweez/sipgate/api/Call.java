@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * @author Michael Kanis
+ */
 public class Call {
 
 	private static DateFormat dateFormat = new SimpleDateFormat(

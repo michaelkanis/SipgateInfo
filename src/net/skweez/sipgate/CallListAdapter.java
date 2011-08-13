@@ -19,6 +19,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * @author Michael Kanis
+ */
 public class CallListAdapter extends BaseAdapter implements Observer {
 
 	static class ViewHolder {
