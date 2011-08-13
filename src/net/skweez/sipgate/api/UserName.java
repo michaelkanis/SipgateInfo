@@ -1,6 +1,5 @@
-package net.skweez.sipgate.model;
+package net.skweez.sipgate.api;
 
-import net.skweez.sipgate.api.Gender;
 
 public class UserName {
 	private final String firstName;
@@ -28,6 +27,7 @@ public class UserName {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return getFirstName() + " " + getLastName();
+		return new StringBuilder(getFirstName()).append(' ')
+				.append(getLastName()).toString();
 	}
 }

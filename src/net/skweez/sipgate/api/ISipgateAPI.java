@@ -2,7 +2,6 @@ package net.skweez.sipgate.api;
 
 import java.util.List;
 
-import net.skweez.sipgate.model.UserName;
 
 
 /**

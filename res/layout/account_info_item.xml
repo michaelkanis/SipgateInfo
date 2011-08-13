@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:padding="7dip" android:orientation="vertical">
+
+	<TextView android:textAppearance="?android:attr/textAppearanceLarge"
+		android:id="@android:id/text1" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Customer number" />
+
+	<TextView android:layout_below="@android:id/text1"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_alignLeft="@android:id/text1" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@android:id/text2" />
+
+</LinearLayout>

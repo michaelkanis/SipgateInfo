@@ -53,7 +53,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 		return callHistory.size();
 	}
 
-	public Object getItem(int position) {
+	public Call getItem(int position) {
 		return callHistory.getCall(position);
 	}
 
@@ -80,7 +80,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Call call = callHistory.getCall(position);
+		Call call = getItem(position);
 
 		holder.numberText.setText(getContactNameFromNumber(call.getRemoteURI()
 				.toString()));
