@@ -65,7 +65,7 @@ public class AccountInfoActivity extends Activity implements Observer {
 
 	private void updateUserInfos(final UserInfos userInfos) {
 		userNameView.setText(userInfos.getUserName().toString());
-		sipIdView.setText(userInfos.getDefaultUserUri().sipUri.getNumber());
+		sipIdView.setText(userInfos.getDefaultUserUri().sipUri.getUserInfo());
 		phoneNumberView.setText("+" + userInfos.getDefaultUserUri().e164Out);
 	}
 

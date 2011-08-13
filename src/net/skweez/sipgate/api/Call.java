@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.net.Uri;
+
 /**
  * @author Michael Kanis
  */
@@ -15,9 +17,9 @@ public class Call {
 
 	private Date timestamp;
 
-	private SipURI localURI;
+	private Uri localURI;
 
-	private SipURI remoteURI;
+	private Uri remoteURI;
 
 	private ECallStatus status;
 
@@ -38,19 +40,19 @@ public class Call {
 		}
 	}
 
-	public SipURI getLocalURI() {
+	public Uri getLocalURI() {
 		return localURI;
 	}
 
-	public void setLocalURI(SipURI localURI) {
+	public void setLocalURI(Uri localURI) {
 		this.localURI = localURI;
 	}
 
-	public SipURI getRemoteURI() {
+	public Uri getRemoteURI() {
 		return remoteURI;
 	}
 
-	public void setRemoteURI(SipURI remoteURI) {
+	public void setRemoteURI(Uri remoteURI) {
 		this.remoteURI = remoteURI;
 	}
 

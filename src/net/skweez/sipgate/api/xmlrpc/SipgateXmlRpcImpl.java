@@ -28,7 +28,6 @@ import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.api.Gender;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
-import net.skweez.sipgate.api.SipURI;
 import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.model.UserName;
@@ -98,8 +97,8 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 	private Call createCallFromMap(Map map) {
 		Call call = new Call();
 
-		call.setLocalURI(new SipURI((String) map.get("LocalUri")));
-		call.setRemoteURI(new SipURI((String) map.get("RemoteUri")));
+		call.setLocalURI(SipgateUriHelper.createUriFromString((String) map.get("LocalUri")));
+		call.setRemoteURI(SipgateUriHelper.createUriFromString((String) map.get("RemoteUri")));
 		call.setStatus(ECallStatus.fromString((String) map.get("Status")));
 		call.setTimestamp((String) map.get("Timestamp"));
 
@@ -116,8 +115,8 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 			Map entry = (Map) userUriMap[i];
 
 			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
-					new SipURI(entry.get("SipUri").toString()), new Boolean(
-							entry.get("DefaultUri").toString()));
+					SipgateUriHelper.createUriFromString(entry.get("SipUri").toString()),
+					new Boolean(entry.get("DefaultUri").toString()));
 		}
 		return userUriList;
 	}
