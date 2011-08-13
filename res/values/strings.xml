@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">sipgate Info</string>
+    <string name="app_name">Sipgate Info</string>
     <string name="menuitem.setup">Setup</string>
     <string name="menuitem.refresh">Refresh</string>
     <string name="account.phoneOut">Phone Number:</string>
-    <string name="account.sipid">sipgate ID:</string>
+    <string name="account.sipid">Sipgate ID:</string>
     <string name="loading">Loading …</string>
     <string name="settings">Settings</string>
     <string name="version">Version</string>

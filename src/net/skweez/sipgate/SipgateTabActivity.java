@@ -1,7 +1,7 @@
 package net.skweez.sipgate;
 
-import net.skweez.sipgate.model.CallHistory;
 import net.skweez.sipgate.model.AccountInfo;
+import net.skweez.sipgate.model.CallHistory;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -35,9 +35,11 @@ public class SipgateTabActivity extends TabActivity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		int currentTab = getTabHost().getCurrentTab();
 		super.onConfigurationChanged(newConfig);
 		setContentView(R.layout.main);
 		initializeUi();
+		getTabHost().setCurrentTab(currentTab);
 		refresh();
 	}
 
@@ -51,16 +53,18 @@ public class SipgateTabActivity extends TabActivity {
 
 		Resources resources = getResources();
 
+		MyTabContentFactory factory = new MyTabContentFactory();
+
 		tabSpec = tabHost.newTabSpec(getString(R.string.account_tab_tag));
 		tabSpec.setIndicator(getString(R.string.account_tab_name),
 				resources.getDrawable(R.drawable.ic_tab_account));
-		tabSpec.setContent(new MyTabContentFactory());
+		tabSpec.setContent(factory);
 		tabHost.addTab(tabSpec);
 
 		tabSpec = tabHost.newTabSpec(getString(R.string.call_tab_tag));
 		tabSpec.setIndicator(getString(R.string.call_tab_name),
 				resources.getDrawable(R.drawable.ic_tab_recent));
-		tabSpec.setContent(new MyTabContentFactory());
+		tabSpec.setContent(factory);
 		tabHost.addTab(tabSpec);
 	}
 
@@ -89,9 +93,15 @@ public class SipgateTabActivity extends TabActivity {
 	}
 
 	private void refresh() {
+		refreshUserInfos();
 		history.startRefresh();
 		accountInfo.startRefresh();
 		System.out.println("refresh");
+	}
+
+	private void refreshUserInfos() {
+		AccountInfo accountInfo = new AccountInfo();
+		accountInfo.startRefresh();
 	}
 
 	private void showSetupActivity() {
@@ -121,4 +131,5 @@ public class SipgateTabActivity extends TabActivity {
 		}
 
 	}
+
 }
