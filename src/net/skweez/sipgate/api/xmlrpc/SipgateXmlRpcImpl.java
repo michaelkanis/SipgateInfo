@@ -1,17 +1,3 @@
-/*-----------------------------------------------------------------------+
- | sipgate Kontostand
- |                                                                       |
-   $Id: codetemplates.xml 9 2009-03-06 10:09:52Z mks $            
- |                                                                       |
- | Copyright (c)  2004-2011 Technische Universitaet Muenchen             |
- |                                                                       |
- | Technische Universitaet Muenchen               #########  ##########  |
- | Institut fuer Informatik - Lehrstuhl IV           ##  ##  ##  ##  ##  |
- | Prof. Dr. Manfred Broy                            ##  ##  ##  ##  ##  |
- | Boltzmannstr. 3                                   ##  ##  ##  ##  ##  |
- | 85748 Garching bei Muenchen                       ##  ##  ##  ##  ##  |
- | Germany                                           ##  ######  ##  ##  |
- +-----------------------------------------------------------------------*/
 package net.skweez.sipgate.api.xmlrpc;
 
 import java.net.Authenticator;
@@ -23,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import net.skweez.sipgate.NoAuthenticationException;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.api.Gender;
@@ -33,14 +20,9 @@ import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 
 import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 /**
- * 
- * @author mks
- * @author $Author: mks $
- * @version $Rev: 9 $
- * @levd.rating RED Rev:
+ * @author Michael Kanis
  */
 public class SipgateXmlRpcImpl implements ISipgateAPI {
 
@@ -50,20 +32,7 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		API_URI = URI.create("https://samurai.sipgate.net/RPC2");
 	}
 
-	private final XMLRPCClient client;
-
-	public SipgateXmlRpcImpl() {
-		PasswordAuthentication authentication = Authenticator
-				.requestPasswordAuthentication(null, 80, "http", null, null);
-
-		String username = authentication.getUserName();
-		String password = String.valueOf(authentication.getPassword());
-
-		client = new XMLRPCClient(API_URI, username, password);
-	}
-
 	/** {@inheritDoc} */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Price getBalance() {
 		Map<String, Map> result = (Map<String, Map>) executeMethod("samurai.BalanceGet");
 		Map currentBalance = result.get("CurrentBalance");
@@ -97,8 +66,10 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 	private Call createCallFromMap(Map map) {
 		Call call = new Call();
 
-		call.setLocalURI(SipgateUriHelper.createUriFromString((String) map.get("LocalUri")));
-		call.setRemoteURI(SipgateUriHelper.createUriFromString((String) map.get("RemoteUri")));
+		call.setLocalURI(SipgateUriHelper.createUriFromString((String) map
+				.get("LocalUri")));
+		call.setRemoteURI(SipgateUriHelper.createUriFromString((String) map
+				.get("RemoteUri")));
 		call.setStatus(ECallStatus.fromString((String) map.get("Status")));
 		call.setTimestamp((String) map.get("Timestamp"));
 
@@ -115,8 +86,9 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 			Map entry = (Map) userUriMap[i];
 
 			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
-					SipgateUriHelper.createUriFromString(entry.get("SipUri").toString()),
-					new Boolean(entry.get("DefaultUri").toString()));
+					SipgateUriHelper.createUriFromString(entry.get("SipUri")
+							.toString()), new Boolean(entry.get("DefaultUri")
+							.toString()));
 		}
 		return userUriList;
 	}
@@ -130,10 +102,28 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 	private Map<String, ? extends Object> executeMethod(String method,
 			String... params) {
+
 		try {
-			return (Map<String, Object>) client.callEx(method, params);
-		} catch (final XMLRPCException exception) {
+			return (Map<String, Object>) getAuthenticatedClient().callEx(
+					method, params);
+		} catch (final Exception exception) {
 			throw new SipgateException(exception);
+		}
+	}
+
+	private XMLRPCClient getAuthenticatedClient()
+			throws NoAuthenticationException {
+
+		PasswordAuthentication authentication = Authenticator
+				.requestPasswordAuthentication(null, 80, "http", null, null);
+
+		if (authentication != null) {
+			String username = authentication.getUserName();
+			String password = String.valueOf(authentication.getPassword());
+
+			return new XMLRPCClient(API_URI, username, password);
+		} else {
+			throw new NoAuthenticationException();
 		}
 	}
 }

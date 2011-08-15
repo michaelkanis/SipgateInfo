@@ -6,11 +6,10 @@ import java.net.PasswordAuthentication;
 import android.content.SharedPreferences;
 
 /**
+ * An implementation of {@link Authenticator} that gets user name and password
+ * from the {@link SharedPreferences}.
  * 
- * @author mks
- * @author $Author: mks $
- * @version $Rev: 9 $
- * @levd.rating RED Rev:
+ * @author Michael Kanis
  */
 public class PreferencesAuthenticator extends Authenticator {
 
@@ -23,7 +22,14 @@ public class PreferencesAuthenticator extends Authenticator {
 	/** {@inheritDoc} */
 	@Override
 	protected PasswordAuthentication getPasswordAuthentication() {
-		return new PasswordAuthentication(prefs.getString("username", ""),
-				prefs.getString("password", "").toCharArray());
+
+		String userName = prefs.getString("username", null);
+		String password = prefs.getString("password", null);
+
+		if (userName == null || password == null) {
+			return null;
+		}
+
+		return new PasswordAuthentication(userName, password.toCharArray());
 	}
 }
