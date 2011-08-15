@@ -7,7 +7,7 @@ import java.util.Observer;
 
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ECallStatus;
-import net.skweez.sipgate.model.CallHistory;
+import net.skweez.sipgate.model.AccountInfo;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
@@ -30,7 +30,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 		TextView dateText;
 	}
 
-	private final CallHistory callHistory;
+	private final AccountInfo callHistory;
 
 	private final LayoutInflater inflater;
 
@@ -38,7 +38,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 
 	private final Map<String, String> contactNamesCache;
 
-	public CallListAdapter(Activity activity, CallHistory callHistory) {
+	public CallListAdapter(Activity activity, AccountInfo callHistory) {
 		this.activity = activity;
 		this.callHistory = callHistory;
 
@@ -50,7 +50,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 	}
 
 	public int getCount() {
-		return callHistory.size();
+		return callHistory.getCallHistorySize();
 	}
 
 	public Call getItem(int position) {

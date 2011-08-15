@@ -1,7 +1,6 @@
 package net.skweez.sipgate;
 
 import net.skweez.sipgate.model.AccountInfo;
-import net.skweez.sipgate.model.CallHistory;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,8 +18,6 @@ import android.widget.TabHost.TabContentFactory;
  * @author Michael Kanis
  */
 public class SipgateTabActivity extends TabActivity {
-
-	private final CallHistory history = new CallHistory();
 
 	private final AccountInfo accountInfo = new AccountInfo();
 
@@ -93,15 +90,7 @@ public class SipgateTabActivity extends TabActivity {
 	}
 
 	private void refresh() {
-		refreshUserInfos();
-		history.startRefresh();
-		accountInfo.startRefresh();
-		System.out.println("refresh");
-	}
-
-	private void refreshUserInfos() {
-		AccountInfo accountInfo = new AccountInfo();
-		accountInfo.startRefresh();
+		accountInfo.refresh();
 	}
 
 	private void showSetupActivity() {
@@ -119,7 +108,7 @@ public class SipgateTabActivity extends TabActivity {
 
 			if (tag.equals(getString(R.string.call_tab_tag))) {
 				view.setAdapter(new CallListAdapter(SipgateTabActivity.this,
-						history));
+						accountInfo));
 			} else if (tag.equals(getString(R.string.account_tab_tag))) {
 				view.setAdapter(new AccountInfoAdapter(SipgateTabActivity.this,
 						accountInfo));

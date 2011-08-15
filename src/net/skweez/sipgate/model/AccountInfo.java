@@ -1,13 +1,16 @@
 package net.skweez.sipgate.model;
 
+import java.util.List;
 import java.util.Observable;
 
+import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
+import android.os.AsyncTask;
 import android.util.Log;
 
 /**
@@ -15,35 +18,48 @@ import android.util.Log;
  * @author Michael Kanis
  */
 public class AccountInfo extends Observable {
+	
+	private static final String TAG = AccountInfo.class.getName();
 
 	private UserName userName;
 
 	private UserUri defaultUserUri;
 
 	private Price balance;
+	
+	private List<Call> callHistory;
 
-	public void startRefresh() {
+	public void refresh() {
+		new RefreshAccountInfoTask().execute((Void) null);
+	}
+	
+	private class RefreshAccountInfoTask extends AsyncTask<Void, Void, Void> {
+		
+		private Exception exception = null;
 
-		new Thread() {
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
 
-			/** {@inheritDoc} */
-			@Override
-			public void run() {
-				try {
-					final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
-
-					setUserName(sipgate.getUserName());
-					setDefaultUserUri(sipgate.getUserUriList());
-					setBalance(sipgate.getBalance());
-
-					setChanged();
-					notifyObservers();
-				} catch (SipgateException e) {
-					Log.e("Sipgate", "error", e);
-					// TODO proper error handling!
-				}
+				setUserName(sipgate.getUserName());
+				setDefaultUserUri(sipgate.getUserUriList());
+				setBalance(sipgate.getBalance());
+				setCallHistory(sipgate.getHistoryByDate());
+			} catch (SipgateException exception) {
+				Log.e(TAG, "Exception when refreshing AccountInfo", exception);
+				this.exception = exception;
 			}
-		}.start();
+
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			setChanged();
+			notifyObservers(exception);
+		}
+		
 	}
 
 	public String getCustomerNumber() {
@@ -87,6 +103,22 @@ public class AccountInfo extends Observable {
 
 	private synchronized void setBalance(Price balance) {
 		this.balance = balance;
+	}
+
+	public Call getCall(int index) {
+		return callHistory.get(index);
+	}
+	
+	private void setCallHistory(List<Call> callHistory) {
+		this.callHistory = callHistory;
+	}
+
+	public int getCallHistorySize() {
+		if (callHistory == null) {
+			return 0;
+		}
+
+		return callHistory.size();
 	}
 
 }

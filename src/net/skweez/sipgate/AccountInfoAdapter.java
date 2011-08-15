@@ -5,11 +5,13 @@ import java.util.Observer;
 
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Michael Kanis
@@ -23,9 +25,9 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 
 	private final LayoutInflater inflater;
 
-	private Activity context;
+	private final Context context;
 
-	private AccountInfo accountInfo;
+	private final AccountInfo accountInfo;
 
 	public AccountInfoAdapter(Activity context, AccountInfo accountInfo) {
 		this.context = context;
@@ -67,9 +69,9 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 		if (convertView != null) {
 			item = convertView;
 		} else {
-			item =  inflater.inflate(R.layout.account_info_item, null);
+			item = inflater.inflate(R.layout.account_info_item, null);
 		}
-		
+
 		PairOfStrings strings = getItem(position);
 
 		TextView text1 = (TextView) item.findViewById(android.R.id.text1);
@@ -82,14 +84,16 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 	}
 
 	/** Notifies the view that it needs to update itself. */
-	public void update(Observable arg0, Object arg1) {
-		// call from UI thread, or it will crash
-		context.runOnUiThread(new Runnable() {
-			public void run() {
-				notifyDataSetChanged();
-				System.out.println("notifyDataSetChanged");
-			}
-		});
+	public void update(Observable observable, Object data) {
+
+		if (data != null && data instanceof Exception) {
+			Exception exception = (Exception) data;
+			Toast.makeText(context, exception.getMessage(), Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		notifyDataSetChanged();
+		System.out.println("notifyDataSetChanged");
 	}
 
 	private static class PairOfStrings {
