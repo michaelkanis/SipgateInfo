@@ -5,13 +5,11 @@ import java.util.Observer;
 
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author Michael Kanis
@@ -25,12 +23,9 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 
 	private final LayoutInflater inflater;
 
-	private final Context context;
-
 	private final AccountInfo accountInfo;
 
 	public AccountInfoAdapter(Activity context, AccountInfo accountInfo) {
-		this.context = context;
 		this.accountInfo = accountInfo;
 		accountInfo.addObserver(this);
 
@@ -85,15 +80,7 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 
 	/** Notifies the view that it needs to update itself. */
 	public void update(Observable observable, Object data) {
-
-		if (data != null && data instanceof Exception) {
-			Exception exception = (Exception) data;
-			Toast.makeText(context, exception.getMessage(), Toast.LENGTH_SHORT)
-					.show();
-		}
-
 		notifyDataSetChanged();
-		System.out.println("notifyDataSetChanged");
 	}
 
 	private static class PairOfStrings {

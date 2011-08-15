@@ -1,5 +1,8 @@
 package net.skweez.sipgate;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -12,14 +15,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 import android.widget.TabHost.TabContentFactory;
 
 /**
  * @author Michael Kanis
  */
-public class SipgateTabActivity extends TabActivity {
+public class SipgateTabActivity extends TabActivity implements Observer {
 
-	private final AccountInfo accountInfo = new AccountInfo();
+	private final AccountInfo accountInfo;
+	
+	public SipgateTabActivity() {
+		accountInfo = new AccountInfo();
+		accountInfo.addObserver(this);
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -119,6 +128,14 @@ public class SipgateTabActivity extends TabActivity {
 			return view;
 		}
 
+	}
+
+	public void update(Observable observable, Object data) {
+		if (data != null && data instanceof Exception) {
+			Exception exception = (Exception) data;
+			Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT)
+					.show();
+		}
 	}
 
 }

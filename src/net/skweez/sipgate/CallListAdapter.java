@@ -146,13 +146,8 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 	}
 
 	/** Notifies the view that it needs to update itself. */
-	public void update(Observable arg0, Object arg1) {
-		// call from UI thread, or it will crash
-		activity.runOnUiThread(new Runnable() {
-			public void run() {
-				notifyDataSetChanged();
-			}
-		});
+	public void update(Observable observable, Object data) {
+		notifyDataSetChanged();
 	}
 
 }
