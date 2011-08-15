@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import net.skweez.sipgate.NoAuthenticationException;
+import net.skweez.sipgate.api.AuthenticationException;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.api.Gender;
@@ -19,7 +19,9 @@ import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 
+import org.apache.http.HttpStatus;
 import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 /**
  * @author Michael Kanis
@@ -106,13 +108,20 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		try {
 			return (Map<String, Object>) getAuthenticatedClient().callEx(
 					method, params);
-		} catch (final Exception exception) {
+		} catch (final XMLRPCException exception) {
+			
+			// Sorry, this uses a modified version of XMLRPC :-(
+			// see http://code.google.com/p/android-xmlrpc/issues/detail?id=30
+			if (exception.getHttpStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+				throw new AuthenticationException("Wrong username or password.");
+			}
+			
 			throw new SipgateException(exception);
 		}
 	}
 
 	private XMLRPCClient getAuthenticatedClient()
-			throws NoAuthenticationException {
+			throws AuthenticationException {
 
 		PasswordAuthentication authentication = Authenticator
 				.requestPasswordAuthentication(null, 80, "http", null, null);
@@ -123,7 +132,7 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 			return new XMLRPCClient(API_URI, username, password);
 		} else {
-			throw new NoAuthenticationException();
+			throw new AuthenticationException("Please set up your username and password first.");
 		}
 	}
 }

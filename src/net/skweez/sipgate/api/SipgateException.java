@@ -26,4 +26,8 @@ public class SipgateException extends RuntimeException {
 	public SipgateException(Exception cause) {
 		super(cause);
 	}
+	
+	public SipgateException(String message) {
+		super(message);
+	}
 }

@@ -3,6 +3,8 @@ package net.skweez.sipgate;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.skweez.sipgate.api.AuthenticationException;
+import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -24,7 +26,7 @@ import android.widget.TabHost.TabContentFactory;
 public class SipgateTabActivity extends TabActivity implements Observer {
 
 	private final AccountInfo accountInfo;
-	
+
 	public SipgateTabActivity() {
 		accountInfo = new AccountInfo();
 		accountInfo.addObserver(this);
@@ -133,9 +135,19 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	public void update(Observable observable, Object data) {
 		if (data != null && data instanceof Exception) {
 			Exception exception = (Exception) data;
-			Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT)
-					.show();
+
+			boolean causeIsWrongAuth = exception instanceof AuthenticationException;
+
+			if (causeIsWrongAuth) {
+				showSetupActivity();
+			}
+			
+			showToast(exception.getMessage());
 		}
+	}
+
+	private void showToast(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 }
