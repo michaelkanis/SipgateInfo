@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.skweez.sipgate.api.AuthenticationException;
-import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -15,10 +14,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.TabContentFactory;
+import android.widget.Toast;
 
 /**
  * @author Michael Kanis
@@ -27,15 +28,24 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 	private final AccountInfo accountInfo;
 
+	private CallListAdapter callListAdapter;
+
+	private AccountInfoAdapter accountInfoAdapter;
+
 	public SipgateTabActivity() {
 		accountInfo = new AccountInfo();
 		accountInfo.addObserver(this);
+
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		callListAdapter = new CallListAdapter(this, accountInfo);
+		accountInfoAdapter = new AccountInfoAdapter(this, accountInfo);
+
 		setContentView(R.layout.main);
 		initializeUi();
 		refresh();
@@ -116,13 +126,15 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		public View createTabContent(String tag) {
 
 			ListView view = new ListView(getApplicationContext());
-
 			if (tag.equals(getString(R.string.call_tab_tag))) {
-				view.setAdapter(new CallListAdapter(SipgateTabActivity.this,
-						accountInfo));
+
+				view.setOnItemClickListener(contactClickedHandler);
+				view.setAdapter(callListAdapter);
+
 			} else if (tag.equals(getString(R.string.account_tab_tag))) {
-				view.setAdapter(new AccountInfoAdapter(SipgateTabActivity.this,
-						accountInfo));
+
+				view.setAdapter(accountInfoAdapter);
+
 			} else {
 				throw new IllegalArgumentException();
 			}
@@ -131,6 +143,15 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		}
 
 	}
+
+	private OnItemClickListener contactClickedHandler = new OnItemClickListener() {
+
+		public void onItemClick(AdapterView parent, View v, int position,
+				long id) {
+
+			callListAdapter.contactClicked(position);
+		}
+	};
 
 	public void update(Observable observable, Object data) {
 		if (data != null && data instanceof Exception) {
@@ -141,7 +162,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 			if (causeIsWrongAuth) {
 				showSetupActivity();
 			}
-			
+
 			showToast(exception.getMessage());
 		}
 	}

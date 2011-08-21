@@ -9,8 +9,12 @@ import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ECallStatus;
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +38,12 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 
 	private final LayoutInflater inflater;
 
-	private final Activity activity;
+	private final Activity context;
 
 	private final Map<String, String> contactNamesCache;
 
 	public CallListAdapter(Activity activity, AccountInfo callHistory) {
-		this.activity = activity;
+		this.context = activity;
 		this.callHistory = callHistory;
 
 		callHistory.addObserver(this);
@@ -115,7 +119,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 		Uri contactUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
 				Uri.encode(number));
 
-		Cursor c = activity.getContentResolver().query(contactUri, projection,
+		Cursor c = context.getContentResolver().query(contactUri, projection,
 				null, null, null);
 
 		if (c.moveToFirst()) {
@@ -148,6 +152,46 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 	/** Notifies the view that it needs to update itself. */
 	public void update(Observable observable, Object data) {
 		notifyDataSetChanged();
+	}
+
+	public void contactClicked(int position) {
+		Call call = getItem(position);
+
+		String number = "+" + call.getRemoteURI().getUserInfo();
+		final Uri uri = Uri.fromParts("tel", number, null);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+		final String[] items = new String[] { "Call", "Show Contact" };
+
+		builder.setTitle(number);
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+
+				switch (item) {
+				case 0:
+					dialNumber(uri);
+					break;
+				case 1:
+					openContact(uri);
+					break;
+				}
+			}
+		});
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void dialNumber(Uri number) {
+		Intent intent = new Intent(Intent.ACTION_DIAL, number);
+		context.startActivity(intent);
+	}
+
+	private void openContact(Uri number) {
+		Intent intent = new Intent(
+				ContactsContract.Intents.SHOW_OR_CREATE_CONTACT, number);
+		context.startActivity(intent);
 	}
 
 }
