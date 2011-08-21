@@ -46,23 +46,23 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		callListAdapter = new CallListAdapter(this, accountInfo);
 		accountInfoAdapter = new AccountInfoAdapter(this, accountInfo);
 
-		setContentView(R.layout.main);
 		initializeUi();
-		refresh();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		int currentTab = getTabHost().getCurrentTab();
 		super.onConfigurationChanged(newConfig);
-		setContentView(R.layout.main);
+
 		initializeUi();
+		
 		getTabHost().setCurrentTab(currentTab);
-		refresh();
 	}
 
 	private void initializeUi() {
+		setContentView(R.layout.main);
 		initializeTabs();
+		refresh();
 	}
 
 	private void initializeTabs() {
