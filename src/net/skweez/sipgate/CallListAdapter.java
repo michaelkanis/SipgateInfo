@@ -86,8 +86,8 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 
 		Call call = getItem(position);
 
-		holder.numberText.setText(getContactNameFromNumber(call.getRemoteURI()
-				.getUserInfo().toString()));
+		holder.numberText.setText(getContactNameFromNumber(call
+				.getRemoteNumber()));
 		holder.dateText.setText(call.getTimestamp().toString());
 		holder.callStatusIcon.setImageResource(getImage(call.getStatus()));
 
@@ -157,7 +157,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 	public void contactClicked(int position) {
 		Call call = getItem(position);
 
-		String number = "+" + call.getRemoteURI().getUserInfo();
+		String number = call.getRemoteNumber();
 		final Uri uri = Uri.fromParts("tel", number, null);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);

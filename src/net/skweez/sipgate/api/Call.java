@@ -12,6 +12,14 @@ import android.net.Uri;
  */
 public class Call {
 
+	/**
+	 * @see http://groups.google.com/group/sipgate-api/tree/browse_frm/thread/
+	 *      ba8628f1ade4622c/e1b7d6a847c85949
+	 */
+	private static final String[] statusPrefixes = new String[] { "1100",
+			"1000", "1200", "2100", "2000", "2200", "2300", "2301", "2400",
+			"3000", "3100", "1020", "4000" };
+
 	private static DateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'kk:mm:ssZ");
 
@@ -40,16 +48,21 @@ public class Call {
 		}
 	}
 
-	public Uri getLocalURI() {
-		return localURI;
-	}
-
 	public void setLocalURI(Uri localURI) {
 		this.localURI = localURI;
 	}
 
-	public Uri getRemoteURI() {
-		return remoteURI;
+	public String getRemoteNumber() {
+		String number = remoteURI.getUserInfo();
+
+		for (String prefix : statusPrefixes) {
+			if (number.startsWith(prefix)) {
+				number = number.substring(4);
+				break;
+			}
+		}
+
+		return "00" + number;
 	}
 
 	public void setRemoteURI(Uri remoteURI) {
@@ -66,7 +79,7 @@ public class Call {
 
 	@Override
 	public String toString() {
-		return getRemoteURI().toString();
+		return getRemoteNumber();
 	}
 
 }
