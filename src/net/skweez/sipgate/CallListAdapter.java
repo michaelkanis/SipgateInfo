@@ -83,7 +83,7 @@ public class CallListAdapter extends BaseAdapter implements Observer {
 		Call call = getItem(position);
 
 		holder.numberText.setText(getContactNameFromNumber(call.getRemoteURI()
-				.toString()));
+				.getUserInfo().toString()));
 		holder.dateText.setText(call.getTimestamp().toString());
 		holder.callStatusIcon.setImageResource(getImage(call.getStatus()));
 
