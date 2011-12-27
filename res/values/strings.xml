@@ -13,4 +13,5 @@
     <string name="call_tab_name">Calls</string>
     <string name="account_tab_tag">account</string>
     <string name="account_tab_name">Account</string>
+    <string name="network_not_availale">Network is not available!</string>
 </resources>

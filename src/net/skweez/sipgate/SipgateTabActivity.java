@@ -9,6 +9,9 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -111,7 +114,28 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	}
 
 	private void refresh() {
-		accountInfo.refresh();
+		if (isNetworkAvailable()) {
+			accountInfo.refresh();
+		} else {
+			showToast(getString(R.string.network_not_availale));
+		}
+	}
+
+	private boolean isNetworkAvailable() {
+		final ConnectivityManager connMgr = (ConnectivityManager) this
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		final NetworkInfo[] netInfo = connMgr.getAllNetworkInfo();
+
+		if (netInfo != null) {
+			for (NetworkInfo item : netInfo) {
+				if (item.getState() == NetworkInfo.State.CONNECTED) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	private void showSetupActivity() {
