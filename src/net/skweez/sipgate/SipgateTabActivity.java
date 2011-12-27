@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -46,6 +47,8 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		callListAdapter = new CallListAdapter(this, accountInfo);
 		accountInfoAdapter = new AccountInfoAdapter(this, accountInfo);
 
@@ -115,7 +118,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 	private void refresh() {
 		if (isNetworkAvailable()) {
-			accountInfo.refresh();
+			accountInfo.refresh(this);
 		} else {
 			showToast(getString(R.string.network_not_availale));
 		}

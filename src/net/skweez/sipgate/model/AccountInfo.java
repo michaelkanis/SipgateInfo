@@ -10,6 +10,7 @@ import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,8 +30,11 @@ public class AccountInfo extends Observable {
 	
 	private List<Call> callHistory;
 
-	public void refresh() {
-		new RefreshAccountInfoTask().execute((Void) null);
+	private Activity mActivity;
+
+	public void refresh(Activity activity) {
+		mActivity = activity;
+		new RefreshAccountInfoTask(mActivity).execute((Void) null);
 	}
 	
 	private class RefreshAccountInfoTask extends AsyncTask<Void, Void, Void> {
@@ -56,8 +60,14 @@ public class AccountInfo extends Observable {
 		
 		@Override
 		protected void onPostExecute(Void result) {
+			AccountInfo.mActivity.setProgressBarIndeterminateVisibility(false);
 			setChanged();
 			notifyObservers(exception);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			AccountInfo.mActivity.setProgressBarIndeterminateVisibility(true);
 		}
 		
 	}
