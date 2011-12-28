@@ -19,7 +19,7 @@ import android.util.Log;
  * @author Michael Kanis
  */
 public class AccountInfo extends Observable {
-	
+
 	private static final String TAG = AccountInfo.class.getName();
 
 	private UserName userName;
@@ -27,18 +27,18 @@ public class AccountInfo extends Observable {
 	private UserUri defaultUserUri;
 
 	private Price balance;
-	
+
 	private List<Call> callHistory;
 
 	private Activity mActivity;
 
 	public void refresh(Activity activity) {
 		mActivity = activity;
-		new RefreshAccountInfoTask(mActivity).execute((Void) null);
+		new RefreshAccountInfoTask().execute();
 	}
-	
+
 	private class RefreshAccountInfoTask extends AsyncTask<Void, Void, Void> {
-		
+
 		private Exception exception = null;
 
 		@Override
@@ -57,19 +57,19 @@ public class AccountInfo extends Observable {
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
-			AccountInfo.mActivity.setProgressBarIndeterminateVisibility(false);
+			mActivity.setProgressBarIndeterminateVisibility(false);
 			setChanged();
 			notifyObservers(exception);
 		}
 
 		@Override
 		protected void onPreExecute() {
-			AccountInfo.mActivity.setProgressBarIndeterminateVisibility(true);
+			mActivity.setProgressBarIndeterminateVisibility(true);
 		}
-		
+
 	}
 
 	public String getCustomerNumber() {
@@ -118,7 +118,7 @@ public class AccountInfo extends Observable {
 	public Call getCall(int index) {
 		return callHistory.get(index);
 	}
-	
+
 	private void setCallHistory(List<Call> callHistory) {
 		this.callHistory = callHistory;
 	}
