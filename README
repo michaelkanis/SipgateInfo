@@ -4,6 +4,14 @@ your call log.
 You will need the android-xmlrpc library to build this:
 	http://code.google.com/p/android-xmlrpc/
 
+Contributors
+ * Florian Mutter <elm AT skweez net>
+ * Michael Kanis <mks AT skweez net>
+ * Moritz Lüdecke <ritze AT skweez net>
+ * Michael Kurz <betheg AT bitcloner org>
+
+Thanks!
+
 
 Copyright (C) 2011 skweez.net
 
