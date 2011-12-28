@@ -1,0 +1,4 @@
+* Initiate calls through click2call (should probably be done through an intent
+  receiver, so you can also use it to call contacts from your address book,
+  should it?)
+* Whatever other useful or cool stuff you'd like to implement :-)
