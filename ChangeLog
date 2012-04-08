@@ -1,0 +1,4 @@
+Version 0.3
+
+	* Immediately show data when the App starts and update in a background
+	  service
