@@ -12,7 +12,6 @@ import java.util.Map;
 import net.skweez.sipgate.api.AuthenticationException;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ECallStatus;
-import net.skweez.sipgate.api.Gender;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
@@ -26,6 +25,7 @@ import org.xmlrpc.android.XMLRPCException;
 /**
  * @author Michael Kanis
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 	private static final URI API_URI;
@@ -57,8 +57,8 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 			public int compare(Call call1, Call call2) {
 				// Sort the list in reverse order (-1), so that the newest call
 				// comes first
-				return call1.getTimestamp().compareTo(call2.getTimestamp())
-						* (-1);
+				return (-1)
+						* call1.getTimestamp().compareTo(call2.getTimestamp());
 			}
 		});
 
@@ -76,28 +76,26 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 		return call;
 	}
 
-	public UserUri[] getUserUriList() {
+	public List<UserUri> getOwnUriList() {
 		Map<String, Object> result = (Map<String, Object>) executeMethod("samurai.OwnUriListGet");
 
 		Object[] userUriMap = (Object[]) result.get("OwnUriList");
-		UserUri[] userUriList = new UserUri[userUriMap.length];
+		List<UserUri> list = new ArrayList<UserUri>();
 
 		for (int i = 0; i < userUriMap.length; i++) {
 			Map entry = (Map) userUriMap[i];
 
-			userUriList[i] = new UserUri(entry.get("E164Out").toString(),
+			list.add(new UserUri(entry.get("E164Out").toString(),
 					SipgateUriHelper.createUriFromString(entry.get("SipUri")
 							.toString()), new Boolean(entry.get("DefaultUri")
-							.toString()));
+							.toString())));
 		}
-		return userUriList;
+		return list;
 	}
 
-	public UserName getUserName() {
+	public UserName getUserdataGreeting() {
 		Map<String, String> result = (Map<String, String>) executeMethod("samurai.UserdataGreetingGet");
-
-		return new UserName(result.get("FirstName"), result.get("LastName"),
-				Gender.fromString(result.get("Gender")));
+		return new UserName(result.get("FirstName"), result.get("LastName"));
 	}
 
 	private Map<String, ? extends Object> executeMethod(String method,

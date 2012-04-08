@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.skweez.sipgate.api.Call;
-import net.skweez.sipgate.db.CallsDataSource;
+import net.skweez.sipgate.db.DataSource;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -56,7 +56,7 @@ public class CallListCursorAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		CallListCursorAdapter.ViewHolder holder = (CallListCursorAdapter.ViewHolder) view
 				.getTag();
-		Call call = CallsDataSource.callFromCursor(cursor);
+		Call call = DataSource.getCallFromCursor(cursor);
 		holder.numberText.setText(resolveName(call.getRemoteNumber()));
 		holder.dateText.setText(call.getTimestamp().toString());
 		holder.callStatusIcon.setImageResource(CallUtils.getImage(call
@@ -97,6 +97,6 @@ public class CallListCursorAdapter extends CursorAdapter {
 	}
 
 	public Call getCall(int position) {
-		return CallsDataSource.callFromCursor((Cursor) getItem(position));
+		return DataSource.getCallFromCursor((Cursor) getItem(position));
 	}
 }

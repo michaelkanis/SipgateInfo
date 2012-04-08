@@ -2,14 +2,17 @@ package net.skweez.sipgate;
 
 import java.util.List;
 
+import net.skweez.sipgate.api.AuthenticationException;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
-import net.skweez.sipgate.db.CallsDataSource;
+import net.skweez.sipgate.db.DataSource;
+import net.skweez.sipgate.model.AccountInfo;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 public class QueryService extends IntentService {
 
@@ -18,6 +21,10 @@ public class QueryService extends IntentService {
 	public static final int STATUS_UPDATED_CALLS = 1;
 
 	public static final int STATUS_ERROR = 2;
+
+	public static final int STATUS_UPDATED_ACCOUNT = 3;
+
+	public static final int STATUS_NOT_AUTHENTICATED = 4;
 
 	public QueryService() {
 		super("QueryService");
@@ -30,25 +37,54 @@ public class QueryService extends IntentService {
 		Bundle bundle = new Bundle();
 		if (command.equals("query")) {
 			receiver.send(STATUS_RUNNING, Bundle.EMPTY);
+			DataSource dataSource = new DataSource(getApplicationContext());
 			try {
 				final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
-				queryCalls(sipgate);
+				dataSource.open(false);
+
+				queryAccount(sipgate, dataSource);
+				receiver.send(STATUS_UPDATED_ACCOUNT, bundle);
+
+				queryCalls(sipgate, dataSource);
 				receiver.send(STATUS_UPDATED_CALLS, bundle);
 			} catch (Exception e) {
-				bundle.putString(Intent.EXTRA_TEXT, e.toString());
-				receiver.send(STATUS_ERROR, bundle);
+				Log.e("QueryService", "Error when updating", e);
+
+				if (e instanceof AuthenticationException) {
+					bundle.putString(Intent.EXTRA_TEXT, e.getMessage());
+					receiver.send(STATUS_NOT_AUTHENTICATED, bundle);
+				} else {
+					bundle.putString(Intent.EXTRA_TEXT, e.toString());
+					receiver.send(STATUS_ERROR, bundle);
+				}
+			} finally {
+				dataSource.close();
 			}
 		}
 		this.stopSelf();
 	}
 
-	private void queryCalls(final ISipgateAPI sipgate) {
+	private void queryCalls(final ISipgateAPI sipgate,
+			final DataSource dataSource) {
 		List<Call> calls = sipgate.getHistoryByDate();
-		CallsDataSource dataSource = new CallsDataSource(
-				getApplicationContext());
-		dataSource.open(false);
 		dataSource.removeAllCalls();
 		dataSource.insertCalls(calls);
-		dataSource.close();
+	}
+
+	private void queryAccount(final ISipgateAPI sipgate, DataSource dataSource) {
+		AccountInfo account = dataSource.getAccountInfo();
+		Log.d("QueryService", "Account: " + account);
+		if (account == null) {
+			// Initial loading of complete account data
+			account = new AccountInfo();
+			account.setUserName(sipgate.getUserdataGreeting());
+			account.setDefaultUserUri(sipgate.getOwnUriList());
+			account.setBalance(sipgate.getBalance());
+			dataSource.insertAccountInfo(account);
+		} else {
+			// Only update balance
+			account.setBalance(sipgate.getBalance());
+			dataSource.updateAccountBalance(account);
+		}
 	}
 }

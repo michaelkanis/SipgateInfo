@@ -1,15 +1,12 @@
 package net.skweez.sipgate.api;
 
-
 public class UserName {
 	private final String firstName;
 	private final String lastName;
-	private final Gender gender;
 
-	public UserName(String firstName, String lastName, Gender gender) {
+	public UserName(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.gender = gender;
 	}
 
 	public String getFirstName() {
@@ -18,10 +15,6 @@ public class UserName {
 
 	public String getLastName() {
 		return lastName;
-	}
-
-	public Gender getGender() {
-		return gender;
 	}
 
 	/** {@inheritDoc} */

@@ -1,8 +1,5 @@
 package net.skweez.sipgate;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -14,7 +11,7 @@ import android.widget.TextView;
 /**
  * @author Michael Kanis
  */
-public class AccountInfoAdapter extends BaseAdapter implements Observer {
+public class AccountInfoAdapter extends BaseAdapter {
 
 	private static final int USER_NAME_INDEX = 0;
 	private static final int CUSTOMER_NUMBER_INDEX = 1;
@@ -23,16 +20,18 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 
 	private final LayoutInflater inflater;
 
-	private final AccountInfo accountInfo;
+	private AccountInfo accountInfo;
 
 	public AccountInfoAdapter(Activity context, AccountInfo accountInfo) {
 		this.accountInfo = accountInfo;
-		accountInfo.addObserver(this);
-
 		inflater = LayoutInflater.from(context);
 	}
 
 	public int getCount() {
+		if (accountInfo == null) {
+			return 0;
+		}
+
 		return 4;
 	}
 
@@ -78,36 +77,39 @@ public class AccountInfoAdapter extends BaseAdapter implements Observer {
 		return item;
 	}
 
-	/** Notifies the view that it needs to update itself. */
-	public void update(Observable observable, Object data) {
-		notifyDataSetChanged();
-	}
-
 	private static class PairOfStrings {
 		private String string1;
 		private String string2;
 
 		public PairOfStrings(Object o1, Object o2) {
-			if (o1 != null)
+			if (o1 != null) {
 				this.string1 = o1.toString();
+			}
 
-			if (o2 != null)
+			if (o2 != null) {
 				this.string2 = o2.toString();
+			}
 		}
 
 		public String getString1() {
-			if (string1 != null)
+			if (string1 != null) {
 				return string1;
-			else
+			} else {
 				return "";
+			}
 		}
 
 		public String getString2() {
-			if (string2 != null)
+			if (string2 != null) {
 				return string2;
-			else
+			} else {
 				return "";
+			}
 		}
 	}
 
+	public void setAccountInfo(AccountInfo accountInfo) {
+		this.accountInfo = accountInfo;
+		notifyDataSetChanged();
+	}
 }

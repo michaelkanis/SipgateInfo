@@ -1,16 +1,11 @@
 package net.skweez.sipgate.model;
 
+import java.util.List;
 import java.util.Observable;
 
-import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
-import net.skweez.sipgate.api.SipgateException;
 import net.skweez.sipgate.api.UserName;
 import net.skweez.sipgate.api.UserUri;
-import net.skweez.sipgate.api.xmlrpc.SipgateXmlRpcImpl;
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.util.Log;
 
 /**
  * @author Florian Mutter
@@ -18,53 +13,11 @@ import android.util.Log;
  */
 public class AccountInfo extends Observable {
 
-	private static final String TAG = AccountInfo.class.getName();
-
 	private UserName userName;
 
 	private UserUri defaultUserUri;
 
 	private Price balance;
-
-	private Activity mActivity;
-
-	public void refresh(Activity activity) {
-		mActivity = activity;
-		new RefreshAccountInfoTask().execute();
-	}
-
-	private class RefreshAccountInfoTask extends AsyncTask<Void, Void, Void> {
-
-		private Exception exception = null;
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				final ISipgateAPI sipgate = new SipgateXmlRpcImpl();
-
-				setUserName(sipgate.getUserName());
-				setDefaultUserUri(sipgate.getUserUriList());
-				setBalance(sipgate.getBalance());
-			} catch (SipgateException exception) {
-				Log.e(TAG, "Exception when refreshing AccountInfo", exception);
-				this.exception = exception;
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			mActivity.setProgressBarIndeterminateVisibility(false);
-			notifyObservers(exception);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			mActivity.setProgressBarIndeterminateVisibility(true);
-		}
-
-	}
 
 	public String getCustomerNumber() {
 		if (getDefaultUserUri() != null)
@@ -84,21 +37,25 @@ public class AccountInfo extends Observable {
 		return defaultUserUri;
 	}
 
-	private synchronized void setDefaultUserUri(UserUri[] userUriArray) {
-		for (int i = 0; i < userUriArray.length; i++) {
-			if (userUriArray[i].isDefaultUri())
-				defaultUserUri = userUriArray[i];
+	public void setDefaultUserUri(List<UserUri> uris) {
+		for (int i = 0; i < uris.size(); i++) {
+			if (uris.get(i).isDefaultUri())
+				defaultUserUri = uris.get(i);
 		}
 		// if there is no default userUri, we use the first one in the array
-		defaultUserUri = userUriArray[0];
+		defaultUserUri = uris.get(0);
 		setChanged();
+	}
+
+	public void setDefaultUserUri(UserUri uri) {
+		defaultUserUri = uri;
 	}
 
 	public UserName getUserName() {
 		return userName;
 	}
 
-	private synchronized void setUserName(UserName userName) {
+	public void setUserName(UserName userName) {
 		this.userName = userName;
 		setChanged();
 	}
@@ -107,7 +64,7 @@ public class AccountInfo extends Observable {
 		return balance;
 	}
 
-	private synchronized void setBalance(Price balance) {
+	public void setBalance(Price balance) {
 		this.balance = balance;
 		setChanged();
 	}

@@ -1,11 +1,12 @@
 package net.skweez.sipgate;
 
-import java.util.Observable;
-import java.util.Observer;
-
-import net.skweez.sipgate.api.AuthenticationException;
+import static net.skweez.sipgate.QueryService.STATUS_ERROR;
+import static net.skweez.sipgate.QueryService.STATUS_NOT_AUTHENTICATED;
+import static net.skweez.sipgate.QueryService.STATUS_RUNNING;
+import static net.skweez.sipgate.QueryService.STATUS_UPDATED_ACCOUNT;
+import static net.skweez.sipgate.QueryService.STATUS_UPDATED_CALLS;
 import net.skweez.sipgate.api.Call;
-import net.skweez.sipgate.db.CallsDataSource;
+import net.skweez.sipgate.db.DataSource;
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.AlertDialog;
 import android.app.TabActivity;
@@ -35,12 +36,12 @@ import android.widget.Toast;
 /**
  * @author Michael Kanis
  */
-public class SipgateTabActivity extends TabActivity implements Observer,
+public class SipgateTabActivity extends TabActivity implements
 		QueryResultReceiver.Receiver {
 
 	private final AccountInfo accountInfo;
 
-	private CallsDataSource dataSource;
+	private DataSource dataSource;
 
 	private CallListCursorAdapter callListAdapter;
 
@@ -50,24 +51,23 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 
 	public SipgateTabActivity() {
 		accountInfo = new AccountInfo();
-		accountInfo.addObserver(this);
-
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		accountInfoAdapter = new AccountInfoAdapter(this, accountInfo);
 		callListAdapter = new CallListCursorAdapter(getApplicationContext(),
 				null);
+	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
 		mReceiver = new QueryResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-
 		initializeUi();
 		reloadData();
 	}
@@ -75,18 +75,23 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		dataSource = new CallsDataSource(getApplicationContext());
+		dataSource = new DataSource(getApplicationContext());
 		dataSource.open(true);
 		callListAdapter.changeCursor(dataSource.getAllCallsCursor());
+		accountInfoAdapter.setAccountInfo(dataSource.getAccountInfo());
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();
-		mReceiver.setReceiver(null);
 		dataSource.close();
 		dataSource = null;
+		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		mReceiver.setReceiver(null);
+		super.onStop();
 	}
 
 	@Override
@@ -134,7 +139,6 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 	/** {@inheritDoc} */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
 			reloadData();
@@ -154,8 +158,6 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 			intent.putExtra("receiver", mReceiver);
 			intent.putExtra("command", "query");
 			startService(intent);
-
-			accountInfo.refresh(this);
 		} else {
 			showToast(getString(R.string.network_not_availale));
 		}
@@ -179,10 +181,7 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 	}
 
 	private void showSetupActivity() {
-		Intent intent;
-
-		intent = new Intent().setClass(this, SetupActivity.class);
-		startActivity(intent);
+		startActivity(new Intent(this, SetupActivity.class));
 	}
 
 	private class MyTabContentFactory implements TabContentFactory {
@@ -209,6 +208,7 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 	}
 
 	private final OnItemClickListener contactClickedHandler = new OnItemClickListener() {
+		@SuppressWarnings("rawtypes")
 		public void onItemClick(AdapterView p, View v, int position, long id) {
 			contactClicked(position);
 		}
@@ -254,29 +254,24 @@ public class SipgateTabActivity extends TabActivity implements Observer,
 		startActivity(intent);
 	}
 
-	public void update(Observable observable, Object data) {
-		if (data != null && data instanceof Exception) {
-			Exception exception = (Exception) data;
-
-			boolean causeIsWrongAuth = exception instanceof AuthenticationException;
-
-			if (causeIsWrongAuth) {
-				showSetupActivity();
-			}
-
-			showToast(exception.getMessage());
-		}
-	}
-
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		switch (resultCode) {
-		case QueryService.STATUS_RUNNING:
+		case STATUS_RUNNING:
 			showToast("Updating …");
 			break;
-		case QueryService.STATUS_UPDATED_CALLS:
-			callListAdapter.notifyDataSetChanged();
+		case STATUS_UPDATED_CALLS:
 			callListAdapter.getCursor().requery();
 			showToast("Updated calls.");
+			break;
+		case STATUS_UPDATED_ACCOUNT:
+			accountInfoAdapter.setAccountInfo(dataSource.getAccountInfo());
+			showToast("Updated account.");
+			break;
+		case STATUS_NOT_AUTHENTICATED:
+			showSetupActivity();
+			// Fall through!
+		case STATUS_ERROR:
+			showToast(resultData.getString(Intent.EXTRA_TEXT));
 			break;
 		}
 	}
