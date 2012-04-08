@@ -1,6 +1,7 @@
 package net.skweez.sipgate;
 
 import static net.skweez.sipgate.QueryService.STATUS_ERROR;
+import static net.skweez.sipgate.QueryService.STATUS_FINISHED;
 import static net.skweez.sipgate.QueryService.STATUS_NOT_AUTHENTICATED;
 import static net.skweez.sipgate.QueryService.STATUS_RUNNING;
 import static net.skweez.sipgate.QueryService.STATUS_UPDATED_ACCOUNT;
@@ -115,14 +116,14 @@ public class SipgateTabActivity extends TabActivity implements
 
 		MyTabContentFactory factory = new MyTabContentFactory();
 
-		tabSpec = tabHost.newTabSpec(getString(R.string.account_tab_tag));
-		tabSpec.setIndicator(getString(R.string.account_tab_name),
+		tabSpec = tabHost.newTabSpec(getString(R.string.tabs_account_tag));
+		tabSpec.setIndicator(getString(R.string.tabs_account_title),
 				resources.getDrawable(R.drawable.ic_tab_account));
 		tabSpec.setContent(factory);
 		tabHost.addTab(tabSpec);
 
-		tabSpec = tabHost.newTabSpec(getString(R.string.call_tab_tag));
-		tabSpec.setIndicator(getString(R.string.call_tab_name),
+		tabSpec = tabHost.newTabSpec(getString(R.string.tabs_call_tag));
+		tabSpec.setIndicator(getString(R.string.tabs_call_title),
 				resources.getDrawable(R.drawable.ic_tab_recent));
 		tabSpec.setContent(factory);
 		tabHost.addTab(tabSpec);
@@ -159,7 +160,7 @@ public class SipgateTabActivity extends TabActivity implements
 			intent.putExtra("command", "query");
 			startService(intent);
 		} else {
-			showToast(getString(R.string.network_not_availale));
+			showToast(getString(R.string.networkNotAvailale));
 		}
 	}
 
@@ -185,26 +186,18 @@ public class SipgateTabActivity extends TabActivity implements
 	}
 
 	private class MyTabContentFactory implements TabContentFactory {
-
 		public View createTabContent(String tag) {
-
 			ListView view = new ListView(getApplicationContext());
-			if (tag.equals(getString(R.string.call_tab_tag))) {
-
+			if (tag.equals(getString(R.string.tabs_call_tag))) {
 				view.setOnItemClickListener(contactClickedHandler);
 				view.setAdapter(callListAdapter);
-
-			} else if (tag.equals(getString(R.string.account_tab_tag))) {
-
+			} else if (tag.equals(getString(R.string.tabs_account_tag))) {
 				view.setAdapter(accountInfoAdapter);
-
 			} else {
 				throw new IllegalArgumentException();
 			}
-
 			return view;
 		}
-
 	}
 
 	private final OnItemClickListener contactClickedHandler = new OnItemClickListener() {
@@ -258,6 +251,7 @@ public class SipgateTabActivity extends TabActivity implements
 		switch (resultCode) {
 		case STATUS_RUNNING:
 			showToast("Updating …");
+			setProgressBarIndeterminateVisibility(true);
 			break;
 		case STATUS_UPDATED_CALLS:
 			callListAdapter.getCursor().requery();
@@ -272,6 +266,9 @@ public class SipgateTabActivity extends TabActivity implements
 			// Fall through!
 		case STATUS_ERROR:
 			showToast(resultData.getString(Intent.EXTRA_TEXT));
+			// Fall through!
+		case STATUS_FINISHED:
+			setProgressBarIndeterminateVisibility(false);
 			break;
 		}
 	}

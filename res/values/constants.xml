@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prefs.username.key">username</string>
+    <string name="prefs.password.key">password</string>
+    <string name="prefs.version.key">version</string>
+    
+    <string name="tabs.call.tag">calls</string>
+    <string name="tabs.account.tag">account</string>
+</resources>

@@ -18,18 +18,30 @@ public class SetupActivity extends PreferenceActivity implements
 
 	private EditTextPreference userNamePreference;
 
+	private String KEY_USERNAME;
+
+	private String KEY_VERSION;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		KEY_USERNAME = getString(R.string.prefs_username_key);
+		KEY_VERSION = getString(R.string.prefs_version_key);
+
 		setContentView(R.layout.setup);
-
 		addPreferencesFromResource(R.xml.preferences);
-
 		userNamePreference = (EditTextPreference) getPreferenceScreen()
-				.findPreference("username");
+				.findPreference(KEY_USERNAME);
 
-		// Get the version number and set it as the summary of the version pref.
+		loadVersionInformation();
+	}
+
+	/**
+	 * Gets the version number from the package manager and sets it as the
+	 * summary of the version preference.
+	 */
+	private void loadVersionInformation() {
 		PackageManager pm = getPackageManager();
 		PackageInfo info = null;
 		try {
@@ -37,17 +49,16 @@ public class SetupActivity extends PreferenceActivity implements
 		} catch (NameNotFoundException e) {
 			Log.e(TAG, "Cannot find package info.");
 		}
-		Preference version = findPreference(getString(R.string.version_key));
+		Preference version = findPreference(KEY_VERSION);
 		version.setSummary(info.versionName);
 	}
 
 	/** {@inheritDoc} */
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-
-		if (key.equals("username")) {
+		if (key.equals(KEY_USERNAME)) {
 			userNamePreference.setSummary(sharedPreferences.getString(
-					"username", "Please set up your user name."));
+					KEY_USERNAME, getString(R.string.prefs_username_summary)));
 		}
 	}
 
@@ -56,8 +67,8 @@ public class SetupActivity extends PreferenceActivity implements
 		super.onResume();
 
 		userNamePreference.setSummary(getPreferenceScreen()
-				.getSharedPreferences().getString("username",
-						"Please set up your user name."));
+				.getSharedPreferences().getString(KEY_USERNAME,
+						getString(R.string.prefs_username_summary)));
 
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
@@ -66,7 +77,6 @@ public class SetupActivity extends PreferenceActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
 	}

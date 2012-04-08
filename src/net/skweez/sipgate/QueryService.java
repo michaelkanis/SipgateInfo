@@ -26,6 +26,8 @@ public class QueryService extends IntentService {
 
 	public static final int STATUS_NOT_AUTHENTICATED = 4;
 
+	public static final int STATUS_FINISHED = 5;
+
 	public QueryService() {
 		super("QueryService");
 	}
@@ -61,6 +63,7 @@ public class QueryService extends IntentService {
 				dataSource.close();
 			}
 		}
+		receiver.send(STATUS_FINISHED, Bundle.EMPTY);
 		this.stopSelf();
 	}
 

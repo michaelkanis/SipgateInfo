@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sipgate Info</string>
-    <string name="menuitem.setup">Setup</string>
-    <string name="menuitem.refresh">Refresh</string>
+    <string name="appName">Sipgate Info</string>
+    <string name="networkNotAvailale">Network is not available!</string>
+    
+    <string name="menuitems.refresh.title">Refresh</string>
+    <string name="menuitems.setup.title">Setup</string>
+    
     <string name="account.phoneOut">Phone Number:</string>
     <string name="account.sipid">Sipgate ID:</string>
-    <string name="loading">Loading …</string>
-    <string name="settings">Settings</string>
-    <string name="version">Version</string>
-    <string name="version_key">versionKey</string>
-    <string name="call_tab_tag">calls</string>
-    <string name="call_tab_name">Calls</string>
-    <string name="account_tab_tag">account</string>
-    <string name="account_tab_name">Account</string>
-    <string name="network_not_availale">Network is not available!</string>
+    
+    <string name="prefs.categoryTitle">Settings</string>
+    <string name="prefs.password.title">Password</string>
+    <string name="prefs.username.title">Please set up your username.</string>
+    <string name="prefs.username.summary">Please set up your username.</string>
+    <string name="prefs.version.title">Version</string>
+    
+    <string name="tabs.call.title">Calls</string>
+    <string name="tabs.account.title">Account</string>
 </resources>

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/refresh" android:title="@string/menuitem.refresh"
+
+	<item android:id="@+id/refresh"
+		android:title="@string/menuitems.refresh.title"
 	  	android:icon="@drawable/ic_menu_refresh"></item>
-	<item android:id="@+id/setup" android:title="@string/menuitem.setup"
+
+	<item android:id="@+id/setup"
+		android:title="@string/menuitems.setup.title"
 		android:icon="@android:drawable/ic_menu_preferences"></item>
+
 </menu>
