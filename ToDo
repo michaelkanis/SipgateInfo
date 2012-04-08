@@ -1,4 +1,6 @@
-* Initiate calls through click2call (should probably be done through an intent
-  receiver, so you can also use it to call contacts from your address book,
-  should it?)
+* A widget that shows the balance
+* A notification if your balance drops below a configurable amount
+* Click2Call
+* SMS
+
 * Whatever other useful or cool stuff you'd like to implement :-)
