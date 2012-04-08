@@ -1,4 +1,4 @@
-package net.skweez.sipgate;
+package net.skweez.sipgate.service;
 
 import android.os.Bundle;
 import android.os.Handler;

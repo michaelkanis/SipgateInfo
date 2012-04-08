@@ -1,8 +1,12 @@
-package net.skweez.sipgate;
+package net.skweez.sipgate.activity;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import net.skweez.sipgate.CallUtils;
+import net.skweez.sipgate.R;
+import net.skweez.sipgate.R.id;
+import net.skweez.sipgate.R.layout;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.db.DataSource;
 import android.content.ContentResolver;
@@ -17,7 +21,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class CallListCursorAdapter extends CursorAdapter {
+public class CallListAdapter extends CursorAdapter {
 
 	private static class ViewHolder {
 		ImageView callStatusIcon;
@@ -33,7 +37,7 @@ public class CallListCursorAdapter extends CursorAdapter {
 	/** Holds cached names for phone numbers. */
 	private final Map<String, String> contactNamesCache;
 
-	public CallListCursorAdapter(Context context, Cursor cursor) {
+	public CallListAdapter(Context context, Cursor cursor) {
 		super(context, cursor);
 		inflater = LayoutInflater.from(context);
 		contentResolver = context.getContentResolver();
@@ -43,7 +47,7 @@ public class CallListCursorAdapter extends CursorAdapter {
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = inflater.inflate(R.layout.call_list_item, null);
-		CallListCursorAdapter.ViewHolder holder = new CallListCursorAdapter.ViewHolder();
+		CallListAdapter.ViewHolder holder = new CallListAdapter.ViewHolder();
 		holder.numberText = (TextView) view.findViewById(R.id.numberText);
 		holder.dateText = (TextView) view.findViewById(R.id.dateText);
 		holder.callStatusIcon = (ImageView) view
@@ -54,7 +58,7 @@ public class CallListCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		CallListCursorAdapter.ViewHolder holder = (CallListCursorAdapter.ViewHolder) view
+		CallListAdapter.ViewHolder holder = (CallListAdapter.ViewHolder) view
 				.getTag();
 		Call call = DataSource.getCallFromCursor(cursor);
 		holder.numberText.setText(resolveName(call.getRemoteNumber()));

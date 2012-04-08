@@ -1,5 +1,7 @@
-package net.skweez.sipgate;
+package net.skweez.sipgate.activity;
 
+import net.skweez.sipgate.R;
+import net.skweez.sipgate.R.layout;
 import net.skweez.sipgate.model.AccountInfo;
 import android.app.Activity;
 import android.view.LayoutInflater;

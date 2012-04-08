@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
  * @version $Rev: 9 $
  * @levd.rating RED Rev:
  */
-public class SipgateInfoApplication extends Application {
+public class SipgateApplication extends Application {
 
 	/** {@inheritDoc} */
 	@Override

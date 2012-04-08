@@ -1,14 +1,22 @@
-package net.skweez.sipgate;
+package net.skweez.sipgate.activity;
 
-import static net.skweez.sipgate.QueryService.STATUS_ERROR;
-import static net.skweez.sipgate.QueryService.STATUS_FINISHED;
-import static net.skweez.sipgate.QueryService.STATUS_NOT_AUTHENTICATED;
-import static net.skweez.sipgate.QueryService.STATUS_RUNNING;
-import static net.skweez.sipgate.QueryService.STATUS_UPDATED_ACCOUNT;
-import static net.skweez.sipgate.QueryService.STATUS_UPDATED_CALLS;
+import static net.skweez.sipgate.service.QueryService.STATUS_ERROR;
+import static net.skweez.sipgate.service.QueryService.STATUS_FINISHED;
+import static net.skweez.sipgate.service.QueryService.STATUS_NOT_AUTHENTICATED;
+import static net.skweez.sipgate.service.QueryService.STATUS_RUNNING;
+import static net.skweez.sipgate.service.QueryService.STATUS_UPDATED_ACCOUNT;
+import static net.skweez.sipgate.service.QueryService.STATUS_UPDATED_CALLS;
+import net.skweez.sipgate.R;
+import net.skweez.sipgate.R.drawable;
+import net.skweez.sipgate.R.id;
+import net.skweez.sipgate.R.layout;
+import net.skweez.sipgate.R.menu;
+import net.skweez.sipgate.R.string;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.db.DataSource;
 import net.skweez.sipgate.model.AccountInfo;
+import net.skweez.sipgate.service.QueryResultReceiver;
+import net.skweez.sipgate.service.QueryService;
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
@@ -37,20 +45,20 @@ import android.widget.Toast;
 /**
  * @author Michael Kanis
  */
-public class SipgateTabActivity extends TabActivity implements
+public class MainActivity extends TabActivity implements
 		QueryResultReceiver.Receiver {
 
 	private final AccountInfo accountInfo;
 
 	private DataSource dataSource;
 
-	private CallListCursorAdapter callListAdapter;
+	private CallListAdapter callListAdapter;
 
 	private AccountInfoAdapter accountInfoAdapter;
 
 	private QueryResultReceiver mReceiver;
 
-	public SipgateTabActivity() {
+	public MainActivity() {
 		accountInfo = new AccountInfo();
 	}
 
@@ -60,7 +68,7 @@ public class SipgateTabActivity extends TabActivity implements
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		accountInfoAdapter = new AccountInfoAdapter(this, accountInfo);
-		callListAdapter = new CallListCursorAdapter(getApplicationContext(),
+		callListAdapter = new CallListAdapter(getApplicationContext(),
 				null);
 	}
 

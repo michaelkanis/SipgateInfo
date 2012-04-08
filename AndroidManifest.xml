@@ -7,9 +7,9 @@
 	<uses-sdk android:minSdkVersion="5"></uses-sdk>
 
 	<application android:icon="@drawable/ic_launcher_sipgate"
-		android:label="@string/appName" android:name="SipgateInfoApplication">
+		android:label="@string/appName" android:name=".SipgateApplication">
 
-		<activity android:name=".SipgateTabActivity"
+		<activity android:name=".activity.MainActivity"
 			android:label="@string/appName"
 			android:configChanges="keyboardHidden|orientation">
 			
@@ -20,10 +20,10 @@
 
 		</activity>
 
-		<activity android:name=".SetupActivity"
+		<activity android:name=".activity.SetupActivity"
 			android:label="@string/appName" />
 		
-		<service android:name=".QueryService"></service>
+		<service android:name=".service.QueryService"></service>
 
 	</application>
 </manifest>

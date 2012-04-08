@@ -1,5 +1,9 @@
-package net.skweez.sipgate;
+package net.skweez.sipgate.activity;
 
+import net.skweez.sipgate.R;
+import net.skweez.sipgate.R.layout;
+import net.skweez.sipgate.R.string;
+import net.skweez.sipgate.R.xml;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
