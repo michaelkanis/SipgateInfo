@@ -4,15 +4,22 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.skweez.sipgate.api.AuthenticationException;
+import net.skweez.sipgate.api.Call;
+import net.skweez.sipgate.db.CallsDataSource;
 import net.skweez.sipgate.model.AccountInfo;
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,13 +35,18 @@ import android.widget.Toast;
 /**
  * @author Michael Kanis
  */
-public class SipgateTabActivity extends TabActivity implements Observer {
+public class SipgateTabActivity extends TabActivity implements Observer,
+		QueryResultReceiver.Receiver {
 
 	private final AccountInfo accountInfo;
 
-	private CallListAdapter callListAdapter;
+	private CallsDataSource dataSource;
+
+	private CallListCursorAdapter callListAdapter;
 
 	private AccountInfoAdapter accountInfoAdapter;
+
+	private QueryResultReceiver mReceiver;
 
 	public SipgateTabActivity() {
 		accountInfo = new AccountInfo();
@@ -46,29 +58,48 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-		callListAdapter = new CallListAdapter(this, accountInfo);
 		accountInfoAdapter = new AccountInfoAdapter(this, accountInfo);
+		callListAdapter = new CallListCursorAdapter(getApplicationContext(),
+				null);
+
+		mReceiver = new QueryResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
 
 		initializeUi();
+		reloadData();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		dataSource = new CallsDataSource(getApplicationContext());
+		dataSource.open(true);
+		callListAdapter.changeCursor(dataSource.getAllCallsCursor());
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mReceiver.setReceiver(null);
+		dataSource.close();
+		dataSource = null;
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		int currentTab = getTabHost().getCurrentTab();
 		super.onConfigurationChanged(newConfig);
-
 		initializeUi();
-		
 		getTabHost().setCurrentTab(currentTab);
 	}
 
 	private void initializeUi() {
 		setContentView(R.layout.main);
 		initializeTabs();
-		refresh();
 	}
 
 	private void initializeTabs() {
@@ -106,7 +137,7 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			refresh();
+			reloadData();
 			return true;
 		case R.id.setup:
 			showSetupActivity();
@@ -116,8 +147,14 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		}
 	}
 
-	private void refresh() {
+	private void reloadData() {
 		if (isNetworkAvailable()) {
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+					QueryService.class);
+			intent.putExtra("receiver", mReceiver);
+			intent.putExtra("command", "query");
+			startService(intent);
+
 			accountInfo.refresh(this);
 		} else {
 			showToast(getString(R.string.network_not_availale));
@@ -171,14 +208,51 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 
 	}
 
-	private OnItemClickListener contactClickedHandler = new OnItemClickListener() {
-
-		public void onItemClick(AdapterView parent, View v, int position,
-				long id) {
-
-			callListAdapter.contactClicked(position);
+	private final OnItemClickListener contactClickedHandler = new OnItemClickListener() {
+		public void onItemClick(AdapterView p, View v, int position, long id) {
+			contactClicked(position);
 		}
 	};
+
+	private void contactClicked(int position) {
+		Call call = callListAdapter.getCall(position);
+
+		String number = call.getRemoteNumber();
+		final Uri uri = Uri.fromParts("tel", number, null);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		final String[] items = new String[] { "Call", "Show Contact" };
+
+		builder.setTitle(number);
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+
+				switch (item) {
+				case 0:
+					dialNumber(uri);
+					break;
+				case 1:
+					openContact(uri);
+					break;
+				}
+			}
+		});
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void dialNumber(Uri number) {
+		Intent intent = new Intent(Intent.ACTION_DIAL, number);
+		startActivity(intent);
+	}
+
+	private void openContact(Uri number) {
+		Intent intent = new Intent(
+				ContactsContract.Intents.SHOW_OR_CREATE_CONTACT, number);
+		startActivity(intent);
+	}
 
 	public void update(Observable observable, Object data) {
 		if (data != null && data instanceof Exception) {
@@ -194,8 +268,20 @@ public class SipgateTabActivity extends TabActivity implements Observer {
 		}
 	}
 
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		switch (resultCode) {
+		case QueryService.STATUS_RUNNING:
+			showToast("Updating …");
+			break;
+		case QueryService.STATUS_UPDATED_CALLS:
+			callListAdapter.notifyDataSetChanged();
+			callListAdapter.getCursor().requery();
+			showToast("Updated calls.");
+			break;
+		}
+	}
+
 	private void showToast(String message) {
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
-
 }

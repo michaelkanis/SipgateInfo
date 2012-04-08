@@ -1,9 +1,7 @@
 package net.skweez.sipgate.model;
 
-import java.util.List;
 import java.util.Observable;
 
-import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.api.ISipgateAPI;
 import net.skweez.sipgate.api.Price;
 import net.skweez.sipgate.api.SipgateException;
@@ -28,8 +26,6 @@ public class AccountInfo extends Observable {
 
 	private Price balance;
 
-	private List<Call> callHistory;
-
 	private Activity mActivity;
 
 	public void refresh(Activity activity) {
@@ -49,7 +45,6 @@ public class AccountInfo extends Observable {
 				setUserName(sipgate.getUserName());
 				setDefaultUserUri(sipgate.getUserUriList());
 				setBalance(sipgate.getBalance());
-				setCallHistory(sipgate.getHistoryByDate());
 			} catch (SipgateException exception) {
 				Log.e(TAG, "Exception when refreshing AccountInfo", exception);
 				this.exception = exception;
@@ -61,7 +56,6 @@ public class AccountInfo extends Observable {
 		@Override
 		protected void onPostExecute(Void result) {
 			mActivity.setProgressBarIndeterminateVisibility(false);
-			setChanged();
 			notifyObservers(exception);
 		}
 
@@ -97,6 +91,7 @@ public class AccountInfo extends Observable {
 		}
 		// if there is no default userUri, we use the first one in the array
 		defaultUserUri = userUriArray[0];
+		setChanged();
 	}
 
 	public UserName getUserName() {
@@ -105,6 +100,7 @@ public class AccountInfo extends Observable {
 
 	private synchronized void setUserName(UserName userName) {
 		this.userName = userName;
+		setChanged();
 	}
 
 	public Price getBalance() {
@@ -113,22 +109,6 @@ public class AccountInfo extends Observable {
 
 	private synchronized void setBalance(Price balance) {
 		this.balance = balance;
+		setChanged();
 	}
-
-	public Call getCall(int index) {
-		return callHistory.get(index);
-	}
-
-	private void setCallHistory(List<Call> callHistory) {
-		this.callHistory = callHistory;
-	}
-
-	public int getCallHistorySize() {
-		if (callHistory == null) {
-			return 0;
-		}
-
-		return callHistory.size();
-	}
-
 }

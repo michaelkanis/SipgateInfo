@@ -21,6 +21,8 @@
 		</activity>
 
 		<activity android:name=".SetupActivity"></activity>
+		
+		<service android:name=".QueryService"></service>
 
 	</application>
 </manifest>

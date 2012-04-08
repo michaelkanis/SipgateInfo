@@ -68,8 +68,6 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 	private Call createCallFromMap(Map map) {
 		Call call = new Call();
 
-		call.setLocalURI(SipgateUriHelper.createUriFromString((String) map
-				.get("LocalUri")));
 		call.setRemoteURI(SipgateUriHelper.createUriFromString((String) map
 				.get("RemoteUri")));
 		call.setStatus(ECallStatus.fromString((String) map.get("Status")));
@@ -109,13 +107,13 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 			return (Map<String, Object>) getAuthenticatedClient().callEx(
 					method, params);
 		} catch (final XMLRPCException exception) {
-			
+
 			// Sorry, this uses a modified version of XMLRPC :-(
 			// see http://code.google.com/p/android-xmlrpc/issues/detail?id=30
 			if (exception.getHttpStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
 				throw new AuthenticationException("Wrong username or password.");
 			}
-			
+
 			throw new SipgateException(exception);
 		}
 	}
@@ -132,7 +130,8 @@ public class SipgateXmlRpcImpl implements ISipgateAPI {
 
 			return new XMLRPCClient(API_URI, username, password);
 		} else {
-			throw new AuthenticationException("Please set up your username and password first.");
+			throw new AuthenticationException(
+					"Please set up your username and password first.");
 		}
 	}
 }

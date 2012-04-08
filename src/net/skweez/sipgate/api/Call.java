@@ -12,6 +12,9 @@ import android.net.Uri;
  */
 public class Call {
 
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd'T'kk:mm:ssZ");
+
 	/**
 	 * @see http://groups.google.com/group/sipgate-api/tree/browse_frm/thread/
 	 *      ba8628f1ade4622c/e1b7d6a847c85949
@@ -20,12 +23,7 @@ public class Call {
 			"1000", "1200", "2100", "2000", "2200", "2300", "2301", "2400",
 			"3000", "3100", "1020", "4000" };
 
-	private static DateFormat dateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd'T'kk:mm:ssZ");
-
 	private Date timestamp;
-
-	private Uri localURI;
 
 	private Uri remoteURI;
 
@@ -41,15 +39,15 @@ public class Call {
 
 	public void setTimestamp(String timestamp) {
 		try {
-			this.timestamp = dateFormat.parse(timestamp);
+			this.timestamp = DATE_FORMAT.parse(timestamp);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			// TODO proper error handling
 		}
 	}
 
-	public void setLocalURI(Uri localURI) {
-		this.localURI = localURI;
+	public Uri getRemoteURI() {
+		return remoteURI;
 	}
 
 	public String getRemoteNumber() {
