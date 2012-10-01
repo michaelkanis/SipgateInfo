@@ -17,7 +17,7 @@ public class UserUri {
 	private final boolean defaultUri;
 
 	public UserUri(String e164Out, Uri sipUri, Boolean defaultUri) {
-		this.e164Out = e164Out;
+		this.e164Out = "+" + e164Out;
 		this.sipUri = sipUri;
 		this.defaultUri = defaultUri;
 	}

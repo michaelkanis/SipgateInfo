@@ -60,7 +60,7 @@ public class Call {
 			}
 		}
 
-		return "00" + number;
+		return "+" + number;
 	}
 
 	public void setRemoteURI(Uri remoteURI) {
