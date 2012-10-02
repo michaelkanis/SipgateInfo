@@ -117,7 +117,7 @@ public class DataSource {
 
 	public void insertAccountInfo(AccountInfo info) {
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_ID, Integer.valueOf(info.getCustomerNumber()));
+		values.put(COLUMN_ID, info.getCustomerNumber());
 		values.put(COLUMN_FIRSTNAME, info.getUserName().getFirstName());
 		values.put(COLUMN_LASTNAME, info.getUserName().getLastName());
 		values.put(COLUMN_SIPURI, info.getDefaultUserUri().getSipUri()
