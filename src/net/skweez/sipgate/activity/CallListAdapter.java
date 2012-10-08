@@ -5,8 +5,6 @@ import java.util.Map;
 
 import net.skweez.sipgate.CallUtils;
 import net.skweez.sipgate.R;
-import net.skweez.sipgate.R.id;
-import net.skweez.sipgate.R.layout;
 import net.skweez.sipgate.api.Call;
 import net.skweez.sipgate.db.DataSource;
 import android.content.ContentResolver;
